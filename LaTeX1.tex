@@ -26,21 +26,21 @@
 \begin{document}
 
 %???MNAR title?
-\title{Drug Target Interaction Prediction based on Missing not at Random Labels}
+\title{Drug Target Interaction Prediction with Missing not at Random Labels}
 
 %\author{Chen Lin, Sheng Ni, Xiangxiang Zeng}
 \begin{abstract}
-We introduce a novel probabilistic model, \textbf{F}actorization with \textbf{M}issing \textbf{N}ot at \textbf{R}andom \textbf{L}abels (FMNRL), for \textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) prediction. Unlike previous studies which label unknown DTIs as negative samples, we treat the unnown DTIs as missing not at random responses. FMNRL assumes the labels are probabilistically generated from feature vectors of both drugs and targets, and a hidden matrix mapping from the drug features to target features. By associating the possibility of missing response to the possibility of a negative label, FMNRL can better learn the hidden feature space mapping and thus provide more accurate DTI predictions. Experimental results show that FMNRL achieve significant improvement in term of AUROC and AUPR. 
+We introduce a novel probabilistic model, \textbf{F}actorization with \textbf{M}issing \textbf{N}ot at \textbf{R}andom \textbf{L}abels (FMNRL), for \textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) prediction. Unlike previous studies which label unknown DTIs as negative samples, we treat the unnown DTIs as missing not at random responses. FMNRL assumes the labels are probabilistically generated from feature vectors of both drugs and targets, and a hidden matrix mapping from the drug features to target features. By associating the possibility of a missing response to the possibility of a negative label, FMNRL can learn the hidden feature space mapping better and thus provide more accurate DTI predictions. Experimental results show that FMNRL outperforms state-of-the-art methods. 
 
 \end{abstract}
 
 
-\keywords{}
+\keywords{Missing Not At Random, Drug Target Interaction Prediction, Probabilistic Factor Models}
 
 \maketitle
 \section{Introduction}\label{sec:introduction}
 %Background: DTI
-\textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) is fundamental to drug discovery and design. As biochemical experimental methods for DTI identification are extremely costly and time-consuming, computational DTI prediction methods have received a growing popularity in literature. The mojority of existing computational methods treat DTI prediction as a binary classification task, where known DTIs are labeled as positive and unknown DTIs are labeled as negative~\cite{}. To address the imbalanced problem arised from the binary classification scheme, many research works attempt to extract a subset of reliable negative samples, e.g. by random sampling~\cite{Luo2017Network} or by \textbf{U}nlabel \textbf{L}earning (PU Learning)~\cite{Peng2017Screening}. 
+\textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) is fundamental to drug discovery and design. As biochemical experimental methods for DTI identification are extremely costly and time-consuming, computational DTI prediction methods have received a growing popularity in literature. The mojority of existing computational methods treat DTI prediction as a binary classification task, where known DTIs are labeled as positive and unknown DTIs are labeled as negative~\cite{Ding2013Similarity}. To address the imbalanced problem arised from the binary classification scheme, many research works attempt to extract a subset of reliable negative samples, e.g. by random sampling~\cite{Luo2017Network} or by \textbf{U}nlabel \textbf{L}earning (PU Learning)~\cite{Peng2017Screening}. 
 
 %MNAR intuition
 Instead of labeling the unknown DTIs as negative, we argue that it is more natural to consider the unknown DTIs, i.e. DTIS that are neither identified in vivo to be positive nor experimentally validated to be negative (non-interacting drug-target pairs), as missing responses (i.e. the labels are missing). Our assumption in this work is that labels are not missing at random. This is an intuitive and reasonable assumption because researchers will use their domain expertise to filter DTIs with a high possiblity to be positive and priorize validations for these DTIs in vivo. For example, if researchers prefer to validate drugs with certain pharmacokinetic interactions, i.e. one drug affects the in vivo absorption, distribution, metabolism, or excretion of the target, then the unknown DTIs are not missing at random because drugs without pharmacokinetic interactions with the target are less likely to be positive and hence more likely to be missing.   
@@ -119,6 +119,9 @@ r\sim Bern (\beta_p)
 
 
 \begin{thebibliography}{10}
+\bibitem{Ding2013Similarity}
+Ding, H., Takigawa, I., Mamitsuka, H., and Zhu, S. 
+\newblock Similarity-based machine learning methods for predicting drug–target interactions: a brief review. \newblock In {\em Briefings in bioinformatics}, 15(5), 734-747.
 \bibitem{Peng2017Screening}
 Peng L, Zhu W, Liao B, et al. 
 \newblock Screening drug-target interactions with positive-unlabeled learning. 
