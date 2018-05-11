@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.10)  11 MAY 2018 13:54
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.10)  11 MAY 2018 17:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1423,7 +1423,7 @@ File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 Overfull \hbox (4.6512pt too wide) in paragraph at lines 40--40
-\T1/LinuxLibertineT-TLF/m/n/8 (-20) ACM, New York, NY, USA, []2[] pages. []$htt
+\T1/LinuxLibertineT-TLF/m/n/8 (-20) ACM, New York, NY, USA, []3[] pages. []$htt
 ps : / / doi . org / 10 . 1145 / nnnnnnn . nnnnnnn$[] 
  []
 
@@ -1442,9 +1442,17 @@ Underfull \vbox (badness 5374) has occurred while \output is active []
 
 ]
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 69.
+(Font)              scaled to size 9.0pt on input line 67.
+
+
+Package caption Warning: \label without proper reference on input line 82.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:model' on page 2 undefined on input line 75.
+
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 10.0pt on input line 81.
+(Font)              scaled to size 10.0pt on input line 90.
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
@@ -1468,60 +1476,74 @@ Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
+
+Overfull \hbox (26.8839pt too wide) detected at line 126
+[]\LMS/ntxsy/m/n/9 L \U/ntxmia/m/it/9 = [] [] [] \OML/nxlmi/m/it/9 p\LMS/ntxsy/
+m/n/9 ¹\OML/nxlmi/m/it/9 R[]; P[]\LMS/ntxsy/m/n/9 j\OML/nxlmi/m/it/9 X; Y; ^^[[
+]; ^^Q\LMS/ntxsy/m/n/9 º \U/ntxmia/m/it/9 ý [] [] \OML/nxlmi/m/it/9 p\LMS/ntxsy
+/m/n/9 ¹\OML/nxlmi/m/it/9 R[]; P[]\LMS/ntxsy/m/n/9 j\OML/nxlmi/m/it/9 X; Y; ^^[
+[]; ^^Q\LMS/ntxsy/m/n/9 º
+ []
+
+
+LaTeX Warning: Reference `' on page 2 undefined on input line 134.
+
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 141.
- [2.2
+(Font)              scaled to size 9.0pt on input line 146.
+[2.2] [3.3
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 141.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 141.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 176.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 176.
  (./LaTeX1.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 141.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 141.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 176.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 176.
+Package rerunfilecheck Info: File `LaTeX1.out' has not changed.
+(rerunfilecheck)             Checksum: 395D2F3E91F006FC35514FE8BE229750;1684.
 
 
-Package rerunfilecheck Warning: File `LaTeX1.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
+LaTeX Warning: There were undefined references.
 
-Package rerunfilecheck Info: Checksums for `LaTeX1.out':
-(rerunfilecheck)             Before: 9BB61A99FBEAEFDBEC376F1C49854D42;1684
-(rerunfilecheck)             After:  395D2F3E91F006FC35514FE8BE229750;1684.
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  )
 (\end occurred inside a group at level 1)
 
 ### simple group (level 1) entered at line 1061 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 30975 strings out of 493013
- 563428 string characters out of 6136992
- 697595 words of memory out of 5000000
- 33556 multiletter control sequences out of 15000+600000
- 128721 words of font info for 231 fonts, out of 8000000 for 9000
+ 31045 strings out of 493013
+ 564558 string characters out of 6136992
+ 702102 words of memory out of 5000000
+ 33561 multiletter control sequences out of 15000+600000
+ 139939 words of font info for 281 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
- 60i,11n,94p,1239b,12554s stack positions out of 5000i,500n,10000p,200000b,80000s
-pdfTeX warning (dest): name{section*.5} has been referenced but
- does not exist, replaced by a fixed one
-
-{f:/texlive/2016/texmf-dist/fonts/enc/dvips/libertine/lbtn_c7kyj5.enc}{f:/texli
-ve/2016/texmf-dist/fonts/enc/dvips/newtx/libertinealt.enc}{f:/texlive/2016/texm
-f-dist/fonts/enc/dvips/base/8r.enc}{f:/texlive/2016/texmf-dist/fonts/enc/dvips/
-libertine/lbtn_25tcsq.enc}{f:/texlive/2016/texmf-dist/fonts/enc/dvips/libertine
-/lbtn_7grukw.enc}{f:/texlive/2016/texmf-dist/fonts/enc/dvips/libertine/lbtn_nh7
-7jq.enc}{f:/texlive/2016/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}<
-f:/texlive/2016/texmf-dist/fonts/type1/public/libertine/LinBiolinumT.pfb><f:/te
-xlive/2016/texmf-dist/fonts/type1/public/libertine/LinBiolinumTB.pfb><f:/texliv
-e/2016/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb><f:/texlive/20
-16/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb><f:/texlive/2016/
-texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb><f:/texlive/2016/tex
-mf-dist/fonts/type1/public/newtx/fxlri-7letters.pfb><f:/texlive/2016/texmf-dist
-/fonts/type1/public/txfonts/rtxmi.pfb><f:/texlive/2016/texmf-dist/fonts/type1/p
-ublic/txfonts/rtxr.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/newtx/txs
-ys.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/newtx/zxlri.pfb>
-Output written on LaTeX1.pdf (2 pages, 453105 bytes).
+ 60i,11n,94p,1239b,12560s stack positions out of 5000i,500n,10000p,200000b,80000s
+{f:/texlive/2016/texmf-dist/fonts/enc/dvips/newtx/libertinealt.
+enc}{f:/texlive/2016/texmf-dist/fonts/enc/dvips/libertine/lbtn_c7kyj5.enc}{f:/t
+exlive/2016/texmf-dist/fonts/enc/dvips/base/8r.enc}{f:/texlive/2016/texmf-dist/
+fonts/enc/dvips/libertine/lbtn_25tcsq.enc}{f:/texlive/2016/texmf-dist/fonts/enc
+/dvips/libertine/lbtn_7grukw.enc}{f:/texlive/2016/texmf-dist/fonts/enc/dvips/li
+bertine/lbtn_nh77jq.enc}{f:/texlive/2016/texmf-dist/fonts/enc/dvips/libertine/l
+btn_76gpa5.enc}<f:/texlive/2016/texmf-dist/fonts/type1/public/libertine/LinBiol
+inumT.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/libertine/LinBiolinumT
+B.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pf
+b><f:/texlive/2016/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb><
+f:/texlive/2016/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb><f:/
+texlive/2016/texmf-dist/fonts/type1/public/newtx/fxlri-5letters.pfb><f:/texlive
+/2016/texmf-dist/fonts/type1/public/newtx/fxlri-7letters.pfb><f:/texlive/2016/t
+exmf-dist/fonts/type1/public/newtx/ntxsyralt.pfb><f:/texlive/2016/texmf-dist/fo
+nts/type1/public/txfonts/rtxmi.pfb><f:/texlive/2016/texmf-dist/fonts/type1/publ
+ic/newtx/rtxmi5.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/newtx/rtxmi7
+.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb><f:/texliv
+e/2016/texmf-dist/fonts/type1/public/newtx/txexs.pfb><f:/texlive/2016/texmf-dis
+t/fonts/type1/public/newtx/txsys.pfb><f:/texlive/2016/texmf-dist/fonts/type1/pu
+blic/newtx/zxlri.pfb>
+Output written on LaTeX1.pdf (3 pages, 569586 bytes).
 PDF statistics:
- 162 PDF objects out of 1000 (max. 8388607)
- 131 compressed objects within 2 object streams
- 23 named destinations out of 1000 (max. 500000)
+ 203 PDF objects out of 1000 (max. 8388607)
+ 161 compressed objects within 2 object streams
+ 27 named destinations out of 1000 (max. 500000)
  40065 words of extra memory for PDF output out of 42996 (max. 10000000)
 

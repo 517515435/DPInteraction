@@ -60,17 +60,26 @@ We also want to distinguish our work with another line of research. Usually only
 %structure 
 %This paper is structured as follows. 
 
-
-
-
-
 \section{The Proposed Method}\label{sec:method}
+We start with the problem definitions and notations in Sec.~\ref{sec:input}. We then describe the proposed model FMNRL in Sec.~\ref{sec:model}. Finally we present the influence algorithm in Sec.~\ref{sec:inference}.
+ 
 \subsection{Preliminaries}\label{sec:input}
-Given a set of DTI labels $P=\{p\}$, where $p\in \{0,1\}$. responses  $P=\{p\}$, where $p\in \{0,1\}$
+DTI identification is often modeled as a binary classification task. Formally, we are given $P\in \mathcal{R}^{N\times M}$ a set of DTI labels, where $p_{i,j}=0$ indicates a negative interaction between drug $i$ and target $j$, $p_{i,j}=1$ indicates a positive DTI, the feature vectors on drug side $X\in \mathcal{R}^{N times K}$, where $x_{i,k}$ represents drug $i$'s weight on drug feature $k$, the feature vectors on target side $Y\in \mathcal{R}^{M \times L}$, where $y_{j,l}$ represents target $j$'s weight on target feature $l$. The problem is to predict for a new drug-target pair $<i',j'>$, the possibility of a positive DTI $p(p_{i',j'}=1)$.  
+
+It is worthy to note that many previous works have shown that extracting features $X,Y$ from heterogenous data sources are beneficial. Similar to DTINet~\cite{Luo2017Network}, we use a compact feature expression learnt from aggregating diffusion probabilities on multiple information networks. For example, on the drug side, we can collect drug side-effect network, drug similarity network and so on. On the target side, we can collect protein desease network, protein protein network and so on. The feature learning phase is beyond the scope of this paper. We refer the readers to~\cite{Luo2017Network}.
+
+In addition to the features $X,Y$ and labels $P$, we make one essential modification to the problem definition. We assume that the inputs also contain responses $R\in \mathcal{R}^{N\times M}$, where $R_{i,j}=0$ indicates that an unknown DTI, $R_{i,j}=1$ indicates a verified DTI (positive or negative). For positive responses $R_{i,j}=1$, the labels $P_{i,j}$ are observed. For negative responses $R_{i,j}=1$, the labels are hidden and unknown. 
+
 \subsection{Model}\label{sec:model}
 
+We use a factor model, depicted in Fig.~\ref{fig:model}. The features $X,Y$ are in different dimensions. To associate the drug features with the target features, we introduce a hidden variable $Z\in\mathcal{R}^{K\times L}$, where $Z_{k,l}$ is a projection that maps the drug feature dimension $k$ to the target feature dimension $l$. We assume that $Z$ is sampled from a Gaussian distribution, 
 
-\begin{figure}
+\begin{equation}\label{equ:z}
+\forall k,l, Z_{k,l}\sim \mathcal{N}((0,\sigma^2), 
+\end{equation}
+where $\sigma^2$ is the variance. We use zero mean to favor sparse feature mapping, i.e. a drug feature $k$ is associated with a few target features. 
+
+\begin{figure}\label{fig:model}
   \centering
   \tikz{ %
 %hyper parameters
@@ -80,8 +89,8 @@ Given a set of DTI labels $P=\{p\}$, where $p\in \{0,1\}$. responses  $P=\{p\}$,
      \node[const, right =of y] (sigma) {$\sigma^2$};
   	\node[latent, below = of sigma] (z) {$Z$};       
        %per interaction
-    \node[obs, below=2 of z](p){$p$};
-      \node[obs, below= of p] (r){$r$}; 
+    \node[obs, below=2 of z](p){$P$};
+      \node[obs, below= of p] (r){$R$}; 
 	\node[latent, right = 2 of r] (beta){$\beta$};
 	\node[const,right = of beta](eta) {$\eta$};
     \edge{x}{p};
@@ -98,22 +107,48 @@ Given a set of DTI labels $P=\{p\}$, where $p\in \{0,1\}$. responses  $P=\{p\}$,
 \caption{Graphical Representation of the FMNRL model}
 \end{figure}
 
+We then assume that the binary label $P_{i,j}$ is generated from the following process. 
+\begin{equation}\label{equ:p}
+\forall i,j, p(P_{i,j}=1)=\frac{1}{1+\exp{(XZY)}_{i,j}}
+\end{equation} 
+
+The binary response is sampled from a Bernouli distribution. The parameters of the Bernouli distribution are related to the value of each $P_{i,j}$. Therefore we define $\beta_p\in\mathcal{R}^{2},p\in \{0,1\}$, $\forall p, \beta_{p,0}>0,\beta_{p,1}>0,\beta_{p,0}+\beta_{p,1}=1$, we have: 
 \begin{eqnarray}
-z\sim \mathcal{N}((0,\sigma^2)\\
-p(p=1)=\frac{1}{1+\exp{(xzy)}}\\
-\beta \sim Beta(\eta)\\
-r\sim Bern (\beta_p)
+\forall p\in \{0,1\}, \beta_p \sim Beta(\eta),\\
+\forall i,j, R_{i,j} \sim Bern (\beta_{P_{i,j},1}),
 \end{eqnarray}
+where $\eta$ is the hyperparameter for the Beta distribution. 
 
 \subsection{Inference}\label{sec:inference}
+The objective is to maximize the likelihood which consists of two terms. The first term is on partial observations, i.e. $R_{i,j}=0$ and $P_{i,j}$ unknown. The second terms is on full observations, i.e.$R_{i,j}=1$ and known $P_{i,j}$.
+\begin{equation}\label{equ:loss}
+\mathcal{L}=\sum_{R_{i,j}=0}\sum_{P_{i,j}} \log p(R_{i,j},P_{i,j}|X,Y,\sigma^2,\eta) + \sum_{R_{i,j}=1} \log p(R_{i,j},P_{i,j}|X,Y,\sigma^2,\eta) 
+\end{equation}
 
+Direct optimization for both terms in Equ.~\ref{equ:loss} are intractable, as they involve integration over continuous hidden variable $Z$. We employ the variational inference algorithm to infer the parameters. To use the mean field variational inference, we must approximate the sigmoid function in Equ.~\ref{equ:p} by the exponential distribution. We use the property that any sigmoid function $\sigma(\cdot)$ has a lower bound: 
+\begin{equation}
+\sigma(z)\geq \sigma(\zeta)\exp{(z-\zeta)/2-\lambda(\zeta)(z^2-\zeta^2)},
+\end{equation}  
+where $\lambda(\zeta)=[\sigma(\zeta)-1/2]/[2\zeta]$. 
 
+As shown in Alg.~\ref{}, in each iteration of the inference we alternatively optimize $Z,\beta$ and $\zeta$. 
 \section{Experiment}\label{sec:experiment}
 \subsection{Experimental Setup}
 
+\textbf{Datasets.} Include descriptions and statistics of the data sets here. highlight why we use this data set.
+
+\textbf{Comparative Methods.} Include citations and brief introductions here.
+
+\textbf{Preprocessing.} Include the networks we use
+
+\textbf{Evaluation.} Include the evaluation metrics, AUROC and AUPR name and descriptions, the cross validation details and so on.
+
 \subsection{Results and Analysis}
+\textbf{DTI Prediction Performance.}
 
+\textbf{Stability.}
 
+\textbf{Parameter Tunning.} If there's more space, include the effects of parameters $\sigma^2,\eta$. 
 
 \section{Conclusion}\label{sec:conclusion}
 
