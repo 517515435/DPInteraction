@@ -87,21 +87,21 @@ where $\sigma^2$ is the variance. We use zero mean to favor sparse feature mappi
     \node[const] (x) {$X$} ; %
     \node[const, right =of x] (y) {$Y$};
      \node[const, right =of y] (sigma) {$\sigma^2$};
-  	\node[latent, below = of sigma] (z) {$Z$};       
+    \node[latent, below = of sigma] (z) {$Z$};       
        %per interaction
     \node[obs, below=2 of z](p){$P$};
       \node[obs, below= of p] (r){$R$}; 
-	\node[latent, right = 2 of r] (beta){$\beta$};
-	\node[const,right = of beta](eta) {$\eta$};
+  \node[latent, right = 2 of r] (beta){$\beta$};
+  \node[const,right = of beta](eta) {$\eta$};
     \edge{x}{p};
     \edge{sigma}{z};
     \edge{y}{p};
     \edge{z}{p};
     \edge{p}{r};
-	\edge{beta}{r};
-	\edge{eta}{beta};
+  \edge{beta}{r};
+  \edge{eta}{beta};
      \plate[inner sep=0.2cm, xshift=-0.12cm, yshift=0.12 cm] {plate} {(p) (r)} {N}; 
-	 \plate[inner sep=0.2cm, xshift=-0.12cm, yshift=0.12 cm] {plate2} {(beta)} {2}; 
+   \plate[inner sep=0.2cm, xshift=-0.12cm, yshift=0.12 cm] {plate2} {(beta)} {2}; 
 
  }
 \caption{Graphical Representation of the FMNRL model}
@@ -135,7 +135,8 @@ As shown in Alg.~\ref{}, in each iteration of the inference we alternatively opt
 \section{Experiment}\label{sec:experiment}
 \subsection{Experimental Setup}
 
-\textbf{Datasets.} Include descriptions and statistics of the data sets here. highlight why we use this data set.
+\textbf{Datasets.} %Include descriptions and statistics of the data sets here. highlight why we use this data set.
+We adopt the same datasets as~\cite{Luo2017Network}, which includes four types of nodes: drug nodes(were extracted from the DrugBank database (Version 3.0)~\cite{DrugBank}), protein nodes(were extracted from the HPRD (database Release 9)~\cite{ProteinDatabase}), disease nodes(were extracted from the Comparative Toxicogenomics Database~\cite{ToxicogenomicsDatabase}), side-effect nodes(were extracted from the SIDER database (Version 2)~\cite{SideEffect}). These nodes form six drug/protein related networks. We obtained drug-protein interaction and drug-drug interaction networks from DrugBank (Version 3.0)~\cite{DrugBank}. The drug-disease and protein-disease associations were obtained from the Comparative Toxicogenomics Database~\cite{ToxicogenomicsDatabase}. Drug-side-effect associations were downloaded from the SIDER database (Version 2)~\cite{SideEffect}. Protein-protein interactions were downloaded from the HPRD database (Release 9)~\cite{ProteinDatabase}.
 
 \textbf{Comparative Methods.} Include citations and brief introductions here.
 
@@ -171,6 +172,17 @@ Luo Y, Zhao X, Zhou J, et al.
 \newblock A network integration approach for drug-target interaction prediction and computational drug repositioning from heterogeneous information. 
 \newblock In {\em Nature Communications}, 2017, 8(1).
 
+\bibitem{DrugBank}
+Knox, C. et al. Drugbank 3.0: a comprehensive resource for 'omics' research on drugs. Nucleic Acids Res. 39, D1035-D1041 (2011).
+
+\bibitem{ProteinDatabase}
+Prasad, T. S. K. et al. Human protein reference database-2009 update. Nucleic Acids Res. 37, D767-D772 (2009).
+
+\bibitem{ToxicogenomicsDatabase}
+Davis, A. P. et al. The comparative toxicogenomics database: update 2013. Nucleic Acids Res. 41, D1104-D1114 (2013).
+
+\bibitem{SideEffect}
+Kuhn, M., Campillos, M., Letunic, I., Jensen, L. J. & Bork, P. A side effect resource to capture phenotypic effects of drugs. 6, 343 (2009).
 \end{thebibliography}
 %\balancecolumns
 \end{document}
