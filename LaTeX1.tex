@@ -136,13 +136,25 @@ As shown in Alg.~\ref{}, in each iteration of the inference we alternatively opt
 \subsection{Experimental Setup}
 
 \textbf{Datasets.} %Include descriptions and statistics of the data sets here. highlight why we use this data set.
-We adopt the same datasets as~\cite{Luo2017Network}, which includes four types of nodes: drug nodes(were extracted from the DrugBank database (Version 3.0)~\cite{DrugBank}), protein nodes(were extracted from the HPRD (database Release 9)~\cite{ProteinDatabase}), disease nodes(were extracted from the Comparative Toxicogenomics Database~\cite{ToxicogenomicsDatabase}), side-effect nodes(were extracted from the SIDER database (Version 2)~\cite{SideEffect}). These nodes form six drug/protein related networks. We obtained drug-protein interaction and drug-drug interaction networks from DrugBank (Version 3.0)~\cite{DrugBank}. The drug-disease and protein-disease associations were obtained from the Comparative Toxicogenomics Database~\cite{ToxicogenomicsDatabase}. Drug-side-effect associations were downloaded from the SIDER database (Version 2)~\cite{SideEffect}. Protein-protein interactions were downloaded from the HPRD database (Release 9)~\cite{ProteinDatabase}.
+We use the same datasets as in~\cite{Luo2017Network}:, i.e. the drug-target interaction labels are obtained from the latest version of DrugBank (version 3.0); the feature vectors $X$ are extracted three heterogenous networks: the drug-drug interaction network, drug-disease network and the drug-side-effect network; the feature vectors $Y$ are extracted from three heterogenous networks, the protein-disease association network, protein-protein network and . As shown in Tab.~\ref{tab:data}, only $\%$ of the drug-target interactions are labelled as positive, none is labelled as negative.
 
-\textbf{Comparative Methods.} Include citations and brief introductions here.
+\begin{table}[htp]\label{tab:data}
+\caption{Statistics of the dataset}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Data & \#Drugs & \#Targets & \#Positive & \#Negative & \#Unknown \\\hline
+\end{tabular}
+\end{center}
+\label{default}
+\end{table}%
 
-\textbf{Preprocessing.} Include the networks we use
 
-\textbf{Evaluation.} Include the evaluation metrics, AUROC and AUPR name and descriptions, the cross validation details and so on.
+\textbf{Comparative Methods.} We compare our FMNRL model with 5 state-of-the-art methods: (1) (2) (3) (4) (5)DTINet~\cite{Luo2017Network}, which is a regression model that learns feature space mapping $Z$ by the loss function  $\min_{Z} \sum_{i,j}(P_{i,j}-(XZY)_{i,j})^2$. We do not change the default settings for all the above comparative methods.
+
+%\textbf{Preprocessing.} Include the networks we use
+
+\textbf{Evaluation.} The major evaluation metric is  (AUPR), which is commonly adopted in bioinformatic studies. AUPR computes... An auxiliary evaluation metric is (AUROC), which computes... As in~\cite{Luo2017Network}, we perform two cross-validation tests. The first one is on the full data set, i.e. we randomly segment the whole data set to 5 divisions and conduct 5-fold cross-validation. The second one is on the sampled data set.  We randomly sample the unknown drug-target interactions and construct a data set in which the ratio of positive and unknown samples is $1:10$.
 
 \subsection{Results and Analysis}
 \textbf{DTI Prediction Performance.}
@@ -172,17 +184,17 @@ Luo Y, Zhao X, Zhou J, et al.
 \newblock A network integration approach for drug-target interaction prediction and computational drug repositioning from heterogeneous information. 
 \newblock In {\em Nature Communications}, 2017, 8(1).
 
-\bibitem{DrugBank}
-Knox, C. et al. Drugbank 3.0: a comprehensive resource for 'omics' research on drugs. Nucleic Acids Res. 39, D1035-D1041 (2011).
-
-\bibitem{ProteinDatabase}
-Prasad, T. S. K. et al. Human protein reference database-2009 update. Nucleic Acids Res. 37, D767-D772 (2009).
-
-\bibitem{ToxicogenomicsDatabase}
-Davis, A. P. et al. The comparative toxicogenomics database: update 2013. Nucleic Acids Res. 41, D1104-D1114 (2013).
-
-\bibitem{SideEffect}
-Kuhn, M., Campillos, M., Letunic, I., Jensen, L. J. & Bork, P. A side effect resource to capture phenotypic effects of drugs. 6, 343 (2009).
+%\bibitem{DrugBank}
+%Knox, C. et al. Drugbank 3.0: a comprehensive resource for 'omics' research on drugs. Nucleic Acids Res. 39, D1035-D1041 (2011).
+%
+%\bibitem{ProteinDatabase}
+%Prasad, T. S. K. et al. Human protein reference database-2009 update. Nucleic Acids Res. 37, D767-D772 (2009).
+%
+%\bibitem{ToxicogenomicsDatabase}
+%Davis, A. P. et al. The comparative toxicogenomics database: update 2013. Nucleic Acids Res. 41, D1104-D1114 (2013).
+%
+%\bibitem{SideEffect}
+%Kuhn, M., Campillos, M., Letunic, I., Jensen, L. J. and  Bork, P. A side effect resource to capture phenotypic effects of drugs. 6, 343 (2009).
 \end{thebibliography}
 %\balancecolumns
 \end{document}
