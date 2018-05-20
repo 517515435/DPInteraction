@@ -174,14 +174,15 @@ As shown in Alg.~\ref{alg:model}, in each iteration of the inference we alternat
 \subsection{Experimental Setup}
 
 \textbf{Datasets.} %Include descriptions and statistics of the data sets here. highlight why we use this data set.
-We use the same datasets as in~\cite{Luo2017Network}:, i.e. the drug-target interaction labels are obtained from the latest version of DrugBank (version 3.0); the feature vectors $X$ are extracted three heterogenous networks: the drug-drug interaction network, drug-disease network and the drug-side-effect network; the feature vectors $Y$ are extracted from three heterogenous networks, the protein-disease association network, protein-protein network and . As shown in Tab.~\ref{tab:data}, only $\%$ of the drug-target interactions are labelled as positive, none is labelled as negative.
+We use the same datasets as in~\cite{Luo2017Network}: i.e. the drug-target interaction labels are obtained from the latest version of DrugBank (version 3.0); the feature vectors $X$ are extracted three heterogenous networks: the drug-drug interaction network, the drug-disease network, drug-side-effect network and the drug structure similarity network; the feature vectors $Y$ are extracted from three heterogenous networks, the protein-disease association network, protein-protein network and protein sequence similarity network. As shown in Tab.~\ref{tab:data}, only $0.18\%$ of the drug-target interactions are labelled as positive, none is labelled as negative.
 
-\begin{table}[htp]\label{tab:data}
-\caption{Statistics of the dataset}
+\begin{table}[htp]
+\caption{Statistics of the dataset}\label{tab:data}
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
 Data & \#Drugs & \#Targets & \#Positive & \#Negative & \#Unknown \\\hline
+Count & 708 & 1512 & 1923 & 0 & 1068573 \\\hline
 \end{tabular}
 \end{center}
 \label{default}
@@ -192,7 +193,7 @@ Data & \#Drugs & \#Targets & \#Positive & \#Negative & \#Unknown \\\hline
 
 %\textbf{Preprocessing.} Include the networks we use
 
-\textbf{Evaluation.} The major evaluation metric is  (AUPR), which is commonly adopted in bioinformatic studies. AUPR computes... An auxiliary evaluation metric is (AUROC), which computes... As in~\cite{Luo2017Network}, we perform two cross-validation tests. The first one is on the full data set, i.e. we randomly segment the whole data set to 5 divisions and conduct 5-fold cross-validation. The second one is on the sampled data set.  We randomly sample the unknown drug-target interactions and construct a data set in which the ratio of positive and unknown samples is $1:10$.
+\textbf{Evaluation.} The major evaluation metric is  (AUPR), which is commonly adopted in bioinformatic studies. AUPR computes the area under precision recall curve. An auxiliary evaluation metric is (AUROC), which computes the area under receiver operating characteristic curve. We perform two cross-validation tests. The first one is on the full data set, i.e. we randomly segment the whole data set to 10 divisions and conduct 10-fold cross-validation. The second one is on the sampled data set.  We randomly sample the unknown drug-target interactions and construct a data set in which the ratio of positive and unknown samples is $1:1$ as in~\cite{Luo2017Network}.
 
 \subsection{Results and Analysis}
 \textbf{DTI Prediction Performance.}
