@@ -174,15 +174,15 @@ As shown in Alg.~\ref{alg:model}, in each iteration of the inference we alternat
 
 
 \textbf{Datasets.} %Include descriptions and statistics of the data sets here. highlight why we use this data set.
-We use the same datasets as in~\cite{Luo2017Network}: i.e. the drug-target interaction labels are obtained from the latest version of DrugBank (version 3.0); the feature vectors $X$ are extracted from four heterogenous networks: the drug-drug interaction network (dd), the drug-disease network (di), the drug-side-effect network (de) and the drug structure similarity network (ds); the feature vectors $Y$ are extracted from three heterogenous networks, the protein-disease association network (pd), the protein-protein network (pp) and the protein sequence similarity network (ps). As shown in Tab.~\ref{tab:data}, in the full data set, only $0.18\%$ of the drug-target interactions are labelled as positive, none is labelled as negative. As in~\cite{Luo2017Network} we also construct a sample dataset, where all the positive interactions are reserved and an equal number of unknown interactions are sampled to be negative.
+We use the same datasets as in~\cite{Luo2017Network}: i.e. the drug-target interaction labels are obtained from the latest version of DrugBank (version 3.0); the feature vectors $X$ are extracted from four heterogenous networks: the drug-drug interaction network (dd), the drug-disease network (di), the drug-side-effect network (de) and the drug structure similarity network (ds); the feature vectors $Y$ are extracted from three heterogenous networks: the protein-disease association network (pd), the protein-protein network (pp) and the protein sequence similarity network (ps). As shown in Tab.~\ref{tab:data}, in the full data set, only $0.18\%$ of the drug-target interactions are labelled as positive, none is labelled as negative. As in~\cite{Luo2017Network}, we also construct a sample dataset, where all the positive interactions are reserved and an equal number of unknown interactions are sampled to be negative.
 \begin{table}[htp]
-\caption{Statistics of the dataset}\label{tab:data}
+\caption{Statistics of the datasets}\label{tab:data}
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
 Data & \#Drugs & \#Targets & \#Positive & \#Negative & \#Unknown \\\hline
-Full & 708 & 1512 & 1923 & 0 & 1068573 \\\hline
-Sample & 708 & 1512 & 1923 & 1923 & 1066650 \\\hline
+Full & 708 & 1,512 & 1,923 & 0 & 1,068,573 \\\hline
+Sample & 708 & 1,512 & 1,923 & 1,923 & 1,066,650 \\\hline
 \end{tabular}
 \end{center}
 \label{default}
@@ -194,16 +194,17 @@ Sample & 708 & 1512 & 1923 & 1923 & 1066650 \\\hline
 \textbf{Evaluation.} Throughout the experiment section, the major evaluation metric is \textbf{A}rea \textbf{U}nder \textbf{P}recision \textbf{R}ecall curve (AUPR), which is commonly adopted in bioinformatic studies. An auxiliary evaluation metric is \textbf{A}rea \textbf{U}nder \textbf{ROC} curve (AUROC).
 
 \subsection{Results and Analysis}
-\textbf{DTI Prediction Performance.} We first evaluate the accuracy of DTI prediction of the proposed FMNRL model. We compare our FMNRL model with 5 state-of-the-art methods: (1)DeepWalk~\cite{Zong2017Deep}: a similarity-based drug-target prediction method that enhanced similarity computation by deep learning method within a linked tripartite network. (2)HNM~\cite{Wang2014Drug}: a network model in which strength between a disease-drug pair is calculated through an iterative algorithm on the heterogeneous graph that also incorporates drug-target information. (3) NetLapRLS~\cite{Xia2010Semi}: a manifold regularization semi-supervised learning method (4)PUDTI~\cite{Peng2017Screening}:  an SVM-based optimization model that is trained on negative samples extracted based on positive-unlabeled learning. (5)DTINet~\cite{Luo2017Network}: a regression model that learns feature space mapping $Z$ by the loss function  $\min_{Z} \sum_{i,j}(P_{i,j}-(XZY)_{i,j})^2$. We do not change the default settings for all the above comparative methods.
+\textbf{DTI Prediction Performance.} We first evaluate the accuracy of DTI prediction of the proposed FMNRL model. The number of dimensions for drug features are $K=$, for target features $L=$, hyper-parameters are $\sigma^2=,\eta=$. Convergence is declared when $\delta$.  
+
+We compare our FMNRL model with 5 state-of-the-art methods: (1) DeepWalk~\cite{Zong2017Deep}: a similarity-based drug-target prediction method that enhances similarity computation by deep learning method within a linked tripartite network. (2) HNM~\cite{Wang2014Drug}: a network model in which strength between a disease-drug pair is calculated through an iterative algorithm on the heterogeneous graph that also incorporates drug-target information. (3) NetLapRLS~\cite{Xia2010Semi}: a manifold regularization semi-supervised learning method (4) PUDTI~\cite{Peng2017Screening}: an SVM-based optimization model that is trained on negative samples extracted based on positive-unlabeled learning. (5) DTINet~\cite{Luo2017Network}: a regression model that learns feature space mapping $Z$ by the loss function  $\min_{Z} \sum_{i,j}(P_{i,j}-(XZY)_{i,j})^2$. We do not change the default settings for all the above comparative methods.
 
 
-We perform the evaluation on two data sets. The first one is on the full data set, i.e. we randomly segment the whole data set to 10 divisions and conduct 10-fold cross-validation. The second one is on the sample data set, i.e. keeping the ratio of positive and negative samples to $1:1$, we conduct random sampling for 10 times and the reported results are averaged over the 10-sets. 
+We perform the evaluation on two datasets. The first one is on the full dataset, i.e. we randomly segment the whole data set to 10 divisions and conduct 10-fold cross-validation. The second one is on the sample dataset, i.e. keeping the ratio of positive and negative samples to $1:1$, we conduct random sampling for 10 times and the reported results are averaged over the 10 sets. 
 
-The comparative performances on the full dataset are shown in Fig.~\ref{fig:full}. We can see that (1) FMNRL model significantly boost the AUPR by $10\%$ percent, compared with the best of state-of-the-art methods. The best comparative method is DTINet, which achieves $30\%$. Our FMNRL model obtains a $34\%$ AUPR. As AUPR is well regarded to be a more robust and accurate evaluation metric than AUROC, this observation demonstrates the potential of our model. (2) Most of the state-of-the-art methods have a very low AUPR result on the full dataset. This observation again reveals that obtaining a high RUPR performance is challenging on the full data set. (3) In term of AUROC, the best result is obtained by NetLapRLS. However, the best comparative result is $92\%$, the result of FMNRL is $90\%$, which is comparable. 
+The comparative performances on the full dataset are shown in Fig.~\ref{fig:full}. We can see that (1) FMNRL model significantly boosts the AUPR performance by $10\%$ percent, compared with the best of state-of-the-art methods. The best comparative method is DTINet, which achieves a $30\%$ AUPR. Our FMNRL model obtains a $34\%$ AUPR. As AUPR is well regarded to be a more robust and accurate evaluation metric than AUROC, this observation demonstrates the potential of our model. (2) Most of the state-of-the-art methods yield very low AUPR results on the full dataset. This observation again reveals that obtaining a high AUPR performance is challenging on the full dataset. (3) In term of AUROC, the best result is obtained by NetLapRLS. However, the best comparative result is $92\%$, while FMNRL produces a comparabl $90\%$ AUROC. 
 
 
 \begin{figure}[!ht]
-\label{fig:full}
 \centering
 \scalebox{0.8}{
 \subfigure[AUPR]{
@@ -214,11 +215,10 @@ The comparative performances on the full dataset are shown in Fig.~\ref{fig:full
 \includegraphics[width=5cm,height=3.5cm]{alldata_AUROC.eps}
 \label{fig:allauroc}
 }}
-\caption{On the full dataset, FMNRL model significantly boost AUPR while remaining comparable AUROC.}
+\caption{On the full dataset, FMNRL significantly boosts AUPR while obtaining comparable AUROC.}\label{fig:full}
 \end{figure}
 
 \begin{figure}[!ht]
-\label{fig:sample}
 \centering
 \scalebox{0.8}{
 \subfigure[AUPR]{
@@ -229,16 +229,17 @@ The comparative performances on the full dataset are shown in Fig.~\ref{fig:full
 \includegraphics[width=5cm,height=3.5cm]{11data_AUROC.eps}
 \label{fig:allauroc}
 }}
-\caption{On the sample dataset, FMNRL model outperforms state-of-the-art methods in terms of both AUPR and AUROC.}
+\caption{On the sample dataset, FMNRL outperforms state-of-the-art methods in terms of both AUPR and AUROC.}\label{fig:sample}
 
 \end{figure}
 
 The comparative performances on the sample dataset are shown in Fig.~\ref{fig:sample}. We can see that (1) FMNRL model achieves better AUPR than all state-of-the-art methods. The best comparative method is DTINet, which achieves $80\%$. Our FMNRL model obtains a $94\%$ AUPR. (2) Most of the state-of-the-art methods have a higher AUPR result on the sample dataset than the full dataset, due to the balanced ratio of positive and negative samples. (3) Surprisingly DeepWalk has a very low AUPR performance on the sample set. (4) FMNRL model outperforms all state-of-the-art models in AUROC performance.  The best comparative method is again DTINet, which achieves $90\%$. Our FMNRL model obtains a $92\%$ AUROC. 
 
-\textbf{Stability.}
+\textbf{Stability.} We next study the stability of our FMNRL model. We use various combination of $X$ and $Y$ as inputs. That is, we extract X from the four networks on the drug side (i.e. dd,di,de,ds) respectively, extract Y from the three networks on the protein side (i.e. pp, pd, ps) respectively, and use the $12$ combinations as inputs to train the model. The predictions is tested on the full dataset.
+
+We compare the AUPR and AUROC performances of FMNRL and DTINet. As shown in Fig.~\ref{fig:stability}, FMNRL outperforms DTINet in most cases. FMNRL generates best AUPR results for $10$ feature combinations out of $12$. In term of AUROC, FMNR is better for $7$ feature combinations. The result shows that the performance improvement is stable. Change of feature representations does not affect FMNRL's ability to learn a better feature mapping space.
 
 \begin{figure}[!ht]
-\label{fig:stability}
 \centering
 \subfigure[AUPR]{
 \includegraphics[width=10cm]{stability_AUPR.eps}
@@ -248,17 +249,16 @@ The comparative performances on the sample dataset are shown in Fig.~\ref{fig:sa
 \includegraphics[width=10cm]{stability_AUROC.eps}
 \label{fig:stabilityauroc}
 }
-\caption{Our model is stable with different feature inputs on the full dataset.}
+\caption{Our model is stable with different feature inputs on the full dataset.}\label{fig:stability}
 \end{figure}
 
 
 
 
 
-\textbf{Parameter Tunning.} If there's more space, include the effects of parameters $\sigma^2,\eta$.
+\textbf{Parameter Tunning.} Finally we study the effects of parameters $K,L$. We first fix the parameter $L=100$ and tune the parameter $K=100,200,300,400,500$. We can see from Fig.~\ref{fig:k} and Fig.~\ref{fig:l}, the best number of drug features is around $100$, the best number of target features is $400$. An appropriate number of drug features is important. When the number of drug features is too large, i.e. $K>200$, we observe a descent fall in both AUPR and AUROC. However, the model performance is less sensitive to the number of target features. For $L>500$, AUPR and AUROC remain the same.   
 
 \begin{figure}[!ht]
-\label{fig:k}
 \centering
 \subfigure[AUPR]{
 \includegraphics[width=5cm]{parameter_experiment_drug_feature_AUPR.eps}
@@ -268,11 +268,10 @@ The comparative performances on the sample dataset are shown in Fig.~\ref{fig:sa
 \includegraphics[width=5cm]{parameter_experiment_drug_feature_AUROC.eps}
 \label{fig:kauroc}
 }
-\caption{AUPR and AUROC performance of our model with different $K$ number of drug features.}
+\caption{AUPR and AUROC performance of our model with different $K$ number of drug features.}\label{fig:k}
 \end{figure}
 
 \begin{figure}[!ht]
-\label{fig:l}
 \centering
 \subfigure[AUPR]{
 \includegraphics[width=5cm]{parameter_experiment_protein_feature_AUPR.eps}
@@ -282,11 +281,12 @@ The comparative performances on the sample dataset are shown in Fig.~\ref{fig:sa
 \includegraphics[width=5cm]{parameter_experiment_protein_feature_AUROC.eps}
 \label{fig:lauroc}
 }
-\caption{AUPR and AUROC performance of our model with different $L$ number of protein features.}
+\caption{AUPR and AUROC performance of our model with different $L$ number of protein features.}\label{fig:l}
 \end{figure}
 
 \section{Conclusion}\label{sec:conclusion}
 
+We propose a novel DTI prediction model based on the assumption that unknown DTI labels are missing not at random. By associating the status of a DTI being labelled or unknown to the sign of the DTI label, our proposed FMNRL model can learn a better feature mapping from drug feature space to target feature space. We experimentally demonstrate that FMNRL outperformas state-of-the-art computational DTI identification methods. This word sheds some insights into fully exploiting the information in unknown DTIs. Our further directions include improving the factorization framework and analyzing the missing mechanisms. 
 
 \begin{thebibliography}{10}
 \bibitem{Ding2013Similarity}
