@@ -78,7 +78,7 @@ We use a factor model, depicted in Fig.~\ref{fig:model}. The features $X,Y$ are 
 \end{equation}
 where $\sigma^2$ is the variance. We use zero mean to favor sparse feature mapping, i.e. a drug feature $k$ is associated with a few target features.
 
-\begin{figure}\label{fig:model}
+\begin{figure}
   \centering
   \tikz{ %
 %hyper parameters
@@ -103,7 +103,7 @@ where $\sigma^2$ is the variance. We use zero mean to favor sparse feature mappi
    \plate[inner sep=0.2cm, xshift=-0.12cm, yshift=0.12 cm] {plate2} {(beta)} {2};
 
  }
-\caption{Graphical Representation of the FMNRL model}
+\caption{Graphical Representation of the FMNRL model}\label{fig:model}
 \end{figure}
 
 We then assume that the binary label $P_{i,j}$ is generated from the following process:
@@ -194,14 +194,14 @@ Sample & 708 & 1,512 & 1,923 & 1,923 & 1,066,650 \\\hline
 \textbf{Evaluation.} Throughout the experiment section, the major evaluation metric is \textbf{A}rea \textbf{U}nder \textbf{P}recision \textbf{R}ecall curve (AUPR), which is commonly adopted in bioinformatic studies. An auxiliary evaluation metric is \textbf{A}rea \textbf{U}nder \textbf{ROC} curve (AUROC).
 
 \subsection{Results and Analysis}
-\textbf{DTI Prediction Performance.} We first evaluate the accuracy of DTI prediction of the proposed FMNRL model. The number of dimensions for drug features are $K=$, for target features $L=$, hyper-parameters are $\sigma^2=,\eta=$. Convergence is declared when $\delta$.  
+\textbf{DTI Prediction Performance.} We first evaluate the accuracy of DTI prediction of the proposed FMNRL model. The number of dimensions for drug features are $K=100$, for target features $L=400$, hyper-parameters are $\sigma^2=1,\eta_{0,0}=1,\eta_{0,1}=1,\eta_{1,0}=1,\eta_{1,1}=1$. Convergence is declared when $\delta$.  
 
 We compare our FMNRL model with 5 state-of-the-art methods: (1) DeepWalk~\cite{Zong2017Deep}: a similarity-based drug-target prediction method that enhances similarity computation by deep learning method within a linked tripartite network. (2) HNM~\cite{Wang2014Drug}: a network model in which strength between a disease-drug pair is calculated through an iterative algorithm on the heterogeneous graph that also incorporates drug-target information. (3) NetLapRLS~\cite{Xia2010Semi}: a manifold regularization semi-supervised learning method (4) PUDTI~\cite{Peng2017Screening}: an SVM-based optimization model that is trained on negative samples extracted based on positive-unlabeled learning. (5) DTINet~\cite{Luo2017Network}: a regression model that learns feature space mapping $Z$ by the loss function  $\min_{Z} \sum_{i,j}(P_{i,j}-(XZY)_{i,j})^2$. We do not change the default settings for all the above comparative methods.
 
 
 We perform the evaluation on two datasets. The first one is on the full dataset, i.e. we randomly segment the whole data set to 10 divisions and conduct 10-fold cross-validation. The second one is on the sample dataset, i.e. keeping the ratio of positive and negative samples to $1:1$, we conduct random sampling for 10 times and the reported results are averaged over the 10 sets. 
 
-The comparative performances on the full dataset are shown in Fig.~\ref{fig:full}. We can see that (1) FMNRL model significantly boosts the AUPR performance by $10\%$ percent, compared with the best of state-of-the-art methods. The best comparative method is DTINet, which achieves a $30\%$ AUPR. Our FMNRL model obtains a $34\%$ AUPR. As AUPR is well regarded to be a more robust and accurate evaluation metric than AUROC, this observation demonstrates the potential of our model. (2) Most of the state-of-the-art methods yield very low AUPR results on the full dataset. This observation again reveals that obtaining a high AUPR performance is challenging on the full dataset. (3) In term of AUROC, the best result is obtained by NetLapRLS. However, the best comparative result is $92\%$, while FMNRL produces a comparabl $90\%$ AUROC. 
+The comparative performances on the full dataset are shown in Fig.~\ref{fig:full}. We can see that (1) FMNRL model significantly boosts the AUPR performance by $12.35\%$ percent, compared with the best of state-of-the-art methods. The best comparative method is DTINet, which achieves a $30.29\%$ AUPR. Our FMNRL model obtains a $34.03\%$ AUPR. As AUPR is well regarded to be a more robust and accurate evaluation metric than AUROC, this observation demonstrates the potential of our model. (2) Most of the state-of-the-art methods yield very low AUPR results on the full dataset. This observation again reveals that obtaining a high AUPR performance is challenging on the full dataset. (3) In term of AUROC, the best result is obtained by NetLapRLS. However, the best comparative result is $91.78\%$, while FMNRL produces a comparabl $91.12\%$ AUROC. 
 
 
 \begin{figure}[!ht]
@@ -233,7 +233,7 @@ The comparative performances on the full dataset are shown in Fig.~\ref{fig:full
 
 \end{figure}
 
-The comparative performances on the sample dataset are shown in Fig.~\ref{fig:sample}. We can see that (1) FMNRL model achieves better AUPR than all state-of-the-art methods. The best comparative method is DTINet, which achieves $80\%$. Our FMNRL model obtains a $94\%$ AUPR. (2) Most of the state-of-the-art methods have a higher AUPR result on the sample dataset than the full dataset, due to the balanced ratio of positive and negative samples. (3) Surprisingly DeepWalk has a very low AUPR performance on the sample set. (4) FMNRL model outperforms all state-of-the-art models in AUROC performance.  The best comparative method is again DTINet, which achieves $90\%$. Our FMNRL model obtains a $92\%$ AUROC. 
+The comparative performances on the sample dataset are shown in Fig.~\ref{fig:sample}. We can see that (1) FMNRL model achieves better AUPR than all state-of-the-art methods. The best comparative method is DTINet, which achieves $93.20\%$. Our FMNRL model obtains a $94.66\%$ AUPR. (2) Most of the state-of-the-art methods have a higher AUPR result on the sample dataset than the full dataset, due to the balanced ratio of positive and negative samples. (3) Surprisingly DeepWalk has a very low AUPR performance on the sample set. (4) FMNRL model outperforms all state-of-the-art models in AUROC performance.  The best comparative method is again DTINet, which achieves $91.41\%$. Our FMNRL model obtains a $92.93\%$ AUROC. 
 
 \textbf{Stability.} We next study the stability of our FMNRL model. We use various combination of $X$ and $Y$ as inputs. That is, we extract X from the four networks on the drug side (i.e. dd,di,de,ds) respectively, extract Y from the three networks on the protein side (i.e. pp, pd, ps) respectively, and use the $12$ combinations as inputs to train the model. The predictions is tested on the full dataset.
 
@@ -256,7 +256,7 @@ We compare the AUPR and AUROC performances of FMNRL and DTINet. As shown in Fig.
 
 
 
-\textbf{Parameter Tunning.} Finally we study the effects of parameters $K,L$. We first fix the parameter $L=100$ and tune the parameter $K=100,200,300,400,500$. We can see from Fig.~\ref{fig:k} and Fig.~\ref{fig:l}, the best number of drug features is around $100$, the best number of target features is $400$. An appropriate number of drug features is important. When the number of drug features is too large, i.e. $K>200$, we observe a descent fall in both AUPR and AUROC. However, the model performance is less sensitive to the number of target features. For $L>500$, AUPR and AUROC remain the same.   
+\textbf{Parameter Tunning.} Finally we study the effects of parameters $K,L$. We first fix the parameter $L=400$ and tune the parameter $K=50,100,200,300,400,500$. We can see from Fig.~\ref{fig:k} and Fig.~\ref{fig:l}, the best number of drug features is around $100$, the best number of target features is $400$. An appropriate number of drug features is important. When the number of drug features is too large, i.e. $K>200$, we observe a descent fall in both AUPR and AUROC. However, the model performance is less sensitive to the number of target features. For $L>500$, AUPR and AUROC remain the same.   
 
 \begin{figure}[!ht]
 \centering
