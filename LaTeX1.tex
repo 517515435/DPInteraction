@@ -30,7 +30,7 @@
 
 %\author{Chen Lin, Sheng Ni, Xiangxiang Zeng}
 \begin{abstract}
-We introduce a novel probabilistic model, \textbf{F}actorization with \textbf{M}issing \textbf{N}ot at \textbf{R}andom \textbf{L}abels (FMNRL), for \textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) prediction. DTI prediction is usually modeled as a binary classification problem. Unlike previous studies which label unknown DTIs as negative samples, we treat the unnown DTIs as missing not at random labels. The proposed model, FMNRL assumes the binary DTI labels are probabilistically generated from feature vectors of both drugs and targets, and a hidden matrix mapping from the drug features to target features. By associating the possibility of a missing label to the sign of the label, FMNRL can learn the hidden feature space mapping better and thus provide more accurate DTI predictions. Experimental results show that FMNRL outperforms state-of-the-art methods.
+We introduce a novel probabilistic model, \textbf{F}actorization with \textbf{M}issing \textbf{N}ot at \textbf{R}andom \textbf{L}abels (FMNRL), for \textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) prediction. DTI prediction is usually modeled as a binary classification problem. Unlike previous studies which label unknown DTIs as negative samples, we treat the unnown DTIs as missing not at random labels. The proposed model, FMNRL assumes the binary DTI labels are probabilistically generated from feature vectors of both drugs and targets, and a hidden matrix mapping from the drug features to target features. By associating the possibility of a missing label with the sign of the label, FMNRL can learn the hidden feature space mapping better, and thus can provide more accurate DTI predictions. Experimental results show that FMNRL outperforms state-of-the-art methods.
 \end{abstract}
 
 
@@ -42,25 +42,25 @@ We introduce a novel probabilistic model, \textbf{F}actorization with \textbf{M}
 \textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) is fundamental to drug discovery and design. As biochemical experimental methods for DTI identification are extremely costly and time-consuming, computational DTI prediction methods have received a growing popularity in literature. The majority of existing computational methods treat DTI prediction as a binary classification task, where known DTIs are labeled as positive and unknown DTIs are labeled as negative~\cite{Ding2013Similarity}. To address the imbalanced problem arised from the binary classification scheme, many research has attempted to extract a subset of reliable negative samples, e.g. by random sampling~\cite{Luo2017Network} or by \textbf{P}ositive \textbf{U}nlabel \textbf{L}earning (PU Learning)~\cite{Peng2017Screening}.
 
 %MNAR intuition
-Instead of labeling the unknown DTIs as negative, we argue that it is more natural to consider the unknown DTIs, i.e. DTIS that are neither identified in vivo to be positive nor experimentally validated to be negative (non-interacting drug-target pairs), as missing labels. Furthermore, our assumption in this work is that labels are not missing at random. This is an intuitive and reasonable assumption, because researchers will use their domain expertise to filter DTIs with a high possiblity to be positive and priorize validations for these DTIs in vivo. For example, researchers find the efficacy target of a drug based on principles of biochemistry, biophysics, genetics and chemical biology. If ample evidences exist to support pharmacokinetic interactions with the target, then the possibility of a positive DTI is high, and the researchers are likely to conduct in vivo experiments. On the contrary, drug target interactions that are less likely to be positive are more likely to be ignored by researchers and their labels are likely to be missing.
+Instead of labeling the unknown DTIs as negative, we argue that it is more natural to consider the unknown DTIs, i.e. DTIS that are neither identified in vivo to be positive nor experimentally validated to be negative (non-interacting drug-target pairs), as missing labels. Furthermore, our assumption in this work is that labels are not missing at random. This is an intuitive and reasonable assumption, because researchers will use their domain expertise to filter DTIs with a high possiblity to be positive and priorize validations for these DTIs in vivo. For example, researchers find the efficacy target of a drug based on principles of biochemistry, biophysics, genetics and chemical biology. If ample evidences exist to support positive interactions with the target, then the possibility of a positive DTI is high, and the researchers are likely to conduct in vivo experiments. On the contrary, drug target interactions that are less likely to be positive are more likely to be ignored by researchers and their labels are likely to be missing.
 
 \subsection{Contribution}
 %present work
-Our chief contribution in this work is a novel \textbf{F}actorization with \textbf{M}issing \textbf{N}ot at \textbf{R}andom \textbf{L}abels model (FMNRL). To the best of our knowledge, this is the first time missing not at random theory is applied in DTI identification. The inputs of FMNRL are feature vectors of drugs and targets, the partially observed labels, and the fully observed responses (i.e. labels are given or missing). The feature vectors are leant and integrated from heterogenous data sources. The labels and responses are binary variables. The FMNRL model mimics the probabilitic procedures to generate labels from feature vectors and responses from labels. Specifically, the labels are related to feature vectors of both drugs and targets, and a hidden matrix mapping from the drug features to target features. The possibility of giving a response is associated to the sign of the label.
+Our chief contribution in this work is a novel \textbf{F}actorization with \textbf{M}issing \textbf{N}ot at \textbf{R}andom \textbf{L}abels model (FMNRL). To the best of our knowledge, this is the first time missing not at random theory is applied in DTI identification. The inputs of FMNRL are feature vectors of drugs and targets, the partially observed labels, and the fully observed responses (i.e. labels are given or missing). The feature vectors are leant and integrated from heterogenous sources. The labels and responses are binary variables. The FMNRL model mimics the probabilitic procedures to generate labels from feature vectors and responses from labels. Specifically, the labels are related to feature vectors of both drugs and targets, and a hidden matrix mapping from the drug features to target features. The possibility of giving a response is associated with the sign of the label.
 
-We conduct experiments on a large-scale DPI database. \textbf{A}rea \textbf{U}nder \textbf{R}eceiver \textbf{O}perating \textbf{C}haracteristic curve (AUROC) and \textbf{A}rea \textbf{U}nder \textbf{P} \textbf{R}ecall are the most commonly adopted metrics to evaluate DPI prediction performance. Our model achieves significantly better AUPR results and comparable AUROC results to the best of related works~\cite{Luo2017Network} on both full dataset and sample sets with balanced number of positive and negative labels. In the biomedical field, AUROC is considered to be a more robust and better assessment than AUROC~\cite{Luo2017Network}. Thus our improvment in AUPR is promising.
+We conduct experiments on the latest DTI database. \textbf{A}rea \textbf{U}nder \textbf{R}eceiver \textbf{O}perating \textbf{C}haracteristic curve (AUROC) and \textbf{A}rea \textbf{U}nder \textbf{P}recision \textbf{R}ecall curve (AUPR) are the most commonly adopted metrics to evaluate DTI prediction performance. Our model achieves best AUPR and AUROC results on both full dataset and sample sets with balanced numbers of positive and negative labels. %Moreover, in the biomedical field, AUPR is considered to be a more robust and accurate assessment than AUROC~\cite{Luo2017Network}. Thus our significant improvment in AUPR is promising.
 \subsection{Related Work}
 %distinguision
-One component of our work (i.e labels are generated by feature vectors learnt and fused from heterogenous information networks) is inspired by a recent work DTINet~\cite{Luo2017Network}. However, there are three key differences between our work and DTINet. (1) DTINet is based on deteministic matrix factorization, our work is based on probabilistic factor models. For example, the hidden feature space mapping matrix, labels, and responses are all random variables. This setting enables the FMNRL model to regulate the parameters (i.e. hidden feature space mapping matrix) by introducing approapriate priors and improves performance on sparse data set. (2) DTINet is based on randomly missing responses, i.e. it samples uniformly a set of unknown DTIs as negative sample, while FMNRL is based on missing not at random theories. Statistical theory in~\cite{Little1987Statistical} shows that applying a model based on missing at random assumptions can lead to biased parameter estimation on data sets with missing not at random entries. (3) DTINet adopts only a subset of unknown DTIs to preserve a balanced number of positive and negative samples, while our model uses all information in the data set.
+One component of our work (i.e labels are generated by feature vectors learnt and fused from heterogenous information networks) is inspired by a recent work DTINet~\cite{Luo2017Network}. However, there are three key differences between our work and DTINet. (1) DTINet is based on deteministic matrix factorization, our work is based on probabilistic factor models. For example, the hidden feature space mapping matrix, labels, and responses are all random variables. This setting enables the FMNRL model to regulate the parameters (i.e. hidden feature space mapping matrix) by introducing approapriate priors. Therefore, performance on sparse dataset is improved. (2) DTINet is based on randomly missing responses, i.e. it samples uniformly a set of unknown DTIs as negative sample, while FMNRL is based on missing not at random theories. Statistical theory in~\cite{Little1987Statistical} shows that applying a model based on missing at random assumptions can lead to biased parameter estimation on data sets with missing not at random entries. (3) DTINet adopts only a subset of unknown DTIs to preserve a balanced number of positive and negative samples, while our model uses all information in the data set.
 
-We also want to distinguish our work with another line of research. Usually only positive DTIs are deposited in known databases. Due to the lack of negative samples, recently \textbf{P}ositive \textbf{U}nlabel \textbf{L}earning (PU Learning) is empolyed in DTI identification, e.g. to facilitate negative sample extraction~\cite{Peng2017Screening}. PU learning does not explicitly associate the status of an instance (i.e. being labeled or unlabeled) with the value of its label. We also want to mention here that, although we experiment with datasets where only positive DTIs are deposited, FMNRL is extendable without difficulty to databases where positive and negative DTIs are available. Thus our model is applicable in more scenarios.
+We also want to distinguish our work with another line of research. Usually only positive DTIs are deposited in known databases. Due to the lack of negative samples, PU learning has been empolyed in DTI identification, e.g. to facilitate negative sample extraction~\cite{Peng2017Screening}. PU learning does not explicitly associate the status of an instance (i.e. being labeled or unlabeled) with the value of its label. We also want to mention here that, although we experiment with datasets where only positive DTIs are deposited, FMNRL is extendable without difficulty to databases where positive and negative DTIs are available. Thus our model is applicable in more scenarios.
 
 
 %structure
 %This paper is structured as follows.
 
 \section{The Proposed Method}\label{sec:method}
-We start with the problem definitions and notations in Sec.~\ref{sec:input}. We then describe the proposed model FMNRL in Sec.~\ref{sec:model}. Finally we present the influence algorithm in Sec.~\ref{sec:inference}.
+We start with the problem definitions and notations in Sec.~\ref{sec:input}. We then describe the proposed model FMNRL in Sec.~\ref{sec:model}. Finally we present the inference algorithm in Sec.~\ref{sec:inference}.
 
 \subsection{Preliminaries}\label{sec:input}
 DTI identification is often modeled as a binary classification task. Formally, we are given $P\in \mathcal{R}^{N\times M}$ a set of DTI labels, where $p_{i,j}=0$ indicates a negative interaction between drug $i$ and target $j$, $p_{i,j}=1$ indicates a positive DTI, the feature vectors on drug side $X\in \mathcal{R}^{N \times K}$, where $x_{i,k}$ represents drug $i$'s weight on drug feature $k$, the feature vectors on target side $Y\in \mathcal{R}^{M \times L}$, where $y_{j,l}$ represents target $j$'s weight on target feature $l$. The problem is to predict for a new drug-target pair $<i',j'>$, the possibility of a positive DTI $p(p_{i',j'}=1)$.
@@ -71,7 +71,7 @@ In addition to the features $X,Y$ and labels $P$, we make one essential modifica
 
 \subsection{FMNRL Model}\label{sec:model}
 
-We use a factor model, depicted in Fig.~\ref{fig:model}. The features $X,Y$ are in different dimensions. To associate the drug features with the target features, we introduce a hidden variable $Z\in\mathcal{R}^{K\times L}$, where $Z_{k,l}$ is a projection that maps the drug feature dimension $k$ to the target feature dimension $l$. We assume that $Z$ is sampled from a Gaussian distribution,
+We use a factor model, depicted in Fig.~\ref{fig:model}. The features $X,Y$ are in different dimensions. To associate the drug features with the target features, we introduce a hidden matrix $Z\in\mathcal{R}^{K\times L}$, where $Z_{k,l}$ is a projection that maps the drug feature $k$ to the target feature $l$. We assume that $Z$ is sampled from a Gaussian distribution,
 
 \begin{equation}\label{equ:z}
 \forall k,l, Z_{k,l}\sim \mathcal{N}(0,\sigma^2),
@@ -127,7 +127,7 @@ The objective is to maximize the likelihood which consists of two terms. The fir
 \end{equation}
 
 
-Direct optimization for both terms in Equ.~\ref{equ:loss} are intractable, as they involve integration over continuous hidden variables. For example, $p(R|X,Y,\sigma^2,\eta)=\int_{P,Z,\beta} p(R|P,\beta,\eta) p(P|X,Y,Z) p(Z|\sigma^2) $. We employ variational inference to infer the parameters. That is, we use the mean field assumption to factorize the posterior distribution: 
+Direct optimization for both terms in Equ.~\ref{equ:loss} is intractable, as they involve integration over continuous hidden variables. For example, $p(R|X,Y,\sigma^2,\eta)=\int_{P,Z,\beta} p(R|P,\beta,\eta) p(P|X,Y,Z) p(Z|\sigma^2) p(\beta|\eta) $. We employ variational inference to infer the parameters. That is, we use the mean field assumption to factorize the posterior distribution: 
 
 \begin{equation}
     q(P,Z,\beta|R,X,Y,\sigma^{2},\eta) = q(P|\theta)q(Z|\mu,\upsilon)q(\beta|\rho),
@@ -181,6 +181,7 @@ We use the same datasets as in~\cite{Luo2017Network}: i.e. the drug-target inter
 \begin{table}[htp]
 \caption{Statistics of the datasets}\label{tab:data}
 \vspace*{-10pt}
+\small
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
 Data & \#Drugs & \#Targets & \#Positive & \#Negative & \#Unknown \\\hline
@@ -203,10 +204,10 @@ We compare our FMNRL model with 5 state-of-the-art methods: (1) DeepWalk~\cite{Z
 
 We perform the evaluation on two datasets. The first one is on the full dataset, i.e. we randomly segment the whole data set to 10 divisions and conduct 10-fold cross-validation. The second one is on the sample dataset, i.e. keeping the ratio of positive and negative samples to $1:1$, we conduct random sampling for 10 times and the reported results are averaged over the 10 sets. 
 
-The comparative performance on the full dataset are shown in Fig.~\ref{fig:full}. We can see that (1) FMNRL model significantly boosts the AUPR performance by $12.35\%$, compared with the best of state-of-the-art methods. The best comparative method is DTINet, which achieves a $30.29\%$ AUPR. Our FMNRL model obtains a $34.03\%$ AUPR. As AUPR is well regarded to be a more robust and accurate evaluation metric than AUROC, this observation demonstrates the potential of our model. (2) Most of the state-of-the-art methods yield very low AUPR results on the full dataset. This observation again reveals that obtaining a high AUPR performance is challenging on the full dataset. (3) In term of AUROC, the best result is obtained by NetLapRLS. However, the best comparative result is $91.78\%$, while FMNRL produces a comparable $91.12\%$ AUROC. 
+The comparative performance on the full dataset are shown in Fig.~\ref{fig:full}. We can see that (1) FMNRL model significantly boosts the AUPR performance by $12.35\%$, compared with the best of state-of-the-art methods. The best comparative method is DTINet, which achieves a $30.29\%$ AUPR. Our FMNRL model obtains a $34.03\%$ AUPR. As AUPR is well regarded to be a more robust and accurate evaluation metric than AUROC~\cite{Luo2017Network}, this observation demonstrates the potential of our model. (2) Most of the state-of-the-art methods yield very low AUPR results on the full dataset. This observation again reveals that obtaining a high AUPR performance is challenging on the full dataset. (3) In term of AUROC, the best result is obtained by NetLapRLS. However, the best comparative result is $91.78\%$, while FMNRL produces a comparable $91.12\%$ AUROC. 
 
 
-\begin{figure}[!ht]
+\begin{figure}[t]
 \centering
 \scalebox{0.8}{
 \subfigure[AUPR]{
@@ -221,7 +222,7 @@ The comparative performance on the full dataset are shown in Fig.~\ref{fig:full}
 \caption{On the full dataset, FMNRL significantly boosts AUPR while obtaining comparable AUROC.}\label{fig:full}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[ht]
 \centering
 \scalebox{0.8}{
 \subfigure[AUPR]{
@@ -256,7 +257,7 @@ We compare the AUPR and AUROC performance of FMNRL and DTINet. As shown in Fig.~
 \label{fig:stabilityauroc}
 }
 \vspace*{-10pt}
-\caption{Our model is stable with different feature inputs on the full dataset.}\label{fig:stability}
+\caption{Our model is stable with different feature inputs.}\label{fig:stability}
 \end{figure}
 
 
