@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.10)  23 MAY 2018 12:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2016.10.10)  23 MAY 2018 14:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1396,25 +1396,34 @@ Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
+
+Overfull \hbox (4.74928pt too wide) in paragraph at lines 143--144
+\OT1/LinuxLibertineT-TLF/m/n/9 (-20) tively op-ti-mize the vari-a-tional pa-ram
+-e-ters for $\OML/nxlmi/m/it/9 q\LMS/ntxsy/m/n/9 ¹\OML/nxlmi/m/it/9 Z\LMS/ntxsy
+/m/n/9 j\OML/nxlmi/m/it/9 ^^V; ^^]\LMS/ntxsy/m/n/9 º\OML/nxlmi/m/it/9 ; q\LMS/n
+txsy/m/n/9 ¹\OML/nxlmi/m/it/9 ^^L\LMS/ntxsy/m/n/9 j\OML/nxlmi/m/it/9 ^^Z\LMS/nt
+xsy/m/n/9 º\OML/nxlmi/m/it/9 ; q\LMS/ntxsy/m/n/9 ¹\OML/nxlmi/m/it/9 P\LMS/ntxsy
+/m/n/9 j\OML/nxlmi/m/it/9 ^^R\LMS/ntxsy/m/n/9 º$
+ []
+
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/b/n' will be
 (Font)              scaled to size 6.0pt on input line 152.
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/it' will be
 (Font)              scaled to size 9.0pt on input line 172.
 LaTeX Font Info:    Font shape `OT1/LinuxBiolinumT-TLF/m/n' will be
 (Font)              scaled to size 9.0pt on input line 174.
- [2.2]
+[2.2]
 Package epstopdf Info: Source file: <alldata_AUPR.eps>
-(epstopdf)                    date: 2018-05-23 10:56:25
-(epstopdf)                    size: 40368 bytes
+(epstopdf)                    date: 2018-05-23 13:22:20
+(epstopdf)                    size: 28408 bytes
 (epstopdf)             Output file: <alldata_AUPR-eps-converted-to.pdf>
-(epstopdf)                    date: 2018-05-23 10:57:43
-(epstopdf)                    size: 6944 bytes
+(epstopdf)                    date: 2018-05-23 13:22:29
+(epstopdf)                    size: 6857 bytes
 (epstopdf)             Command: <repstopdf --outfile=alldata_AUPR-eps-converted
 -to.pdf alldata_AUPR.eps>
 (epstopdf)             \includegraphics on input line 221.
 Package epstopdf Info: Output file is already uptodate.
-
-<alldata_AUPR-eps-converted-to.pdf, id=125, 774.895pt x 391.4625pt>
+ <alldata_AUPR-eps-converted-to.pdf, id=125, 774.895pt x 391.4625pt>
 File: alldata_AUPR-eps-converted-to.pdf Graphic file (type pdf)
 
 <use alldata_AUPR-eps-converted-to.pdf>
@@ -1422,11 +1431,11 @@ Package pdftex.def Info: alldata_AUPR-eps-converted-to.pdf used on input line 2
 21.
 (pdftex.def)             Requested size: 142.25371pt x 99.5797pt.
 Package epstopdf Info: Source file: <alldata_AUROC.eps>
-(epstopdf)                    date: 2018-05-23 12:06:37
-(epstopdf)                    size: 63071 bytes
+(epstopdf)                    date: 2018-05-23 13:22:21
+(epstopdf)                    size: 28319 bytes
 (epstopdf)             Output file: <alldata_AUROC-eps-converted-to.pdf>
-(epstopdf)                    date: 2018-05-23 12:22:17
-(epstopdf)                    size: 7804 bytes
+(epstopdf)                    date: 2018-05-23 13:22:31
+(epstopdf)                    size: 7049 bytes
 (epstopdf)             Command: <repstopdf --outfile=alldata_AUROC-eps-converte
 d-to.pdf alldata_AUROC.eps>
 (epstopdf)             \includegraphics on input line 221.
@@ -1440,10 +1449,10 @@ Package pdftex.def Info: alldata_AUROC-eps-converted-to.pdf used on input line
 221.
 (pdftex.def)             Requested size: 142.25371pt x 99.5797pt.
 Package epstopdf Info: Source file: <11data_AUPR.eps>
-(epstopdf)                    date: 2018-05-23 10:56:25
-(epstopdf)                    size: 28687 bytes
+(epstopdf)                    date: 2018-05-23 13:22:20
+(epstopdf)                    size: 28348 bytes
 (epstopdf)             Output file: <11data_AUPR-eps-converted-to.pdf>
-(epstopdf)                    date: 2018-05-23 10:57:48
+(epstopdf)                    date: 2018-05-23 13:22:33
 (epstopdf)                    size: 6866 bytes
 (epstopdf)             Command: <repstopdf --outfile=11data_AUPR-eps-converted-
 to.pdf 11data_AUPR.eps>
@@ -1458,11 +1467,11 @@ Package pdftex.def Info: 11data_AUPR-eps-converted-to.pdf used on input line 23
 6.
 (pdftex.def)             Requested size: 142.25371pt x 99.5797pt.
 Package epstopdf Info: Source file: <11data_AUROC.eps>
-(epstopdf)                    date: 2018-05-23 12:06:36
-(epstopdf)                    size: 28350 bytes
+(epstopdf)                    date: 2018-05-23 13:22:22
+(epstopdf)                    size: 28348 bytes
 (epstopdf)             Output file: <11data_AUROC-eps-converted-to.pdf>
-(epstopdf)                    date: 2018-05-23 12:22:19
-(epstopdf)                    size: 7034 bytes
+(epstopdf)                    date: 2018-05-23 13:22:36
+(epstopdf)                    size: 7032 bytes
 (epstopdf)             Command: <repstopdf --outfile=11data_AUROC-eps-converted
 -to.pdf 11data_AUROC.eps>
 (epstopdf)             \includegraphics on input line 236.
@@ -1478,11 +1487,11 @@ Package pdftex.def Info: 11data_AUROC-eps-converted-to.pdf used on input line 2
  [3.3 <./alldata_AUPR-eps-converted-to.pdf> <./alldata_AUROC-eps-converted-to.p
 df>]
 Package epstopdf Info: Source file: <stability_AUPR.eps>
-(epstopdf)                    date: 2018-05-23 10:56:25
-(epstopdf)                    size: 36088 bytes
+(epstopdf)                    date: 2018-05-23 13:22:20
+(epstopdf)                    size: 35671 bytes
 (epstopdf)             Output file: <stability_AUPR-eps-converted-to.pdf>
-(epstopdf)                    date: 2018-05-23 10:57:53
-(epstopdf)                    size: 7378 bytes
+(epstopdf)                    date: 2018-05-23 13:22:38
+(epstopdf)                    size: 7388 bytes
 (epstopdf)             Command: <repstopdf --outfile=stability_AUPR-eps-convert
 ed-to.pdf stability_AUPR.eps>
 (epstopdf)             \includegraphics on input line 254.
@@ -1496,11 +1505,11 @@ Package pdftex.def Info: stability_AUPR-eps-converted-to.pdf used on input line
  254.
 (pdftex.def)             Requested size: 227.62204pt x 92.83353pt.
 Package epstopdf Info: Source file: <stability_AUROC.eps>
-(epstopdf)                    date: 2018-05-23 10:56:25
-(epstopdf)                    size: 35983 bytes
+(epstopdf)                    date: 2018-05-23 13:22:19
+(epstopdf)                    size: 35557 bytes
 (epstopdf)             Output file: <stability_AUROC-eps-converted-to.pdf>
-(epstopdf)                    date: 2018-05-23 10:57:55
-(epstopdf)                    size: 7595 bytes
+(epstopdf)                    date: 2018-05-23 13:22:40
+(epstopdf)                    size: 7584 bytes
 (epstopdf)             Command: <repstopdf --outfile=stability_AUROC-eps-conver
 ted-to.pdf stability_AUROC.eps>
 (epstopdf)             \includegraphics on input line 259.
@@ -1553,7 +1562,6 @@ ype pdf)
 Package pdftex.def Info: parameter_experiment_protein_feature-eps-converted-to.
 pdf used on input line 279.
 (pdftex.def)             Requested size: 113.81102pt x 96.60802pt.
-Missing character: There is no â in font LinLibertineT-tlf-ot1!
 
 [4.4 <./11data_AUPR-eps-converted-to.pdf> <./11data_AUROC-eps-converted-to.pdf>
  <./stability_AUPR-eps-converted-to.pdf> <./stability_AUROC-eps-converted-to.pd
@@ -1564,15 +1572,9 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 336.
  (./LaTeX1.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 336.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 336.
+Package rerunfilecheck Info: File `LaTeX1.out' has not changed.
+(rerunfilecheck)             Checksum: F6EC0777B427D3FB8288347CD4421F67;759.
 
-
-Package rerunfilecheck Warning: File `LaTeX1.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `LaTeX1.out':
-(rerunfilecheck)             Before: 676936FADC751C3562EC8173CA0BE927;760
-(rerunfilecheck)             After:  F6EC0777B427D3FB8288347CD4421F67;759.
 
 LaTeX Warning: There were multiply-defined labels.
 
@@ -1583,11 +1585,11 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 336.
 ### simple group (level 1) entered at line 1061 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 27289 strings out of 493013
- 515065 string characters out of 6136992
- 663546 words of memory out of 5000000
+ 27292 strings out of 493013
+ 515140 string characters out of 6136992
+ 663666 words of memory out of 5000000
  29825 multiletter control sequences out of 15000+600000
- 89881 words of font info for 286 fonts, out of 8000000 for 9000
+ 90154 words of font info for 288 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
  60i,16n,94p,1248b,12518s stack positions out of 5000i,500n,10000p,200000b,80000s
 {f:/texlive/2016/texmf-dist/fonts/enc/dvips/newtx/libertinealt.
@@ -1610,7 +1612,7 @@ ic/newtx/rtxmi5.pfb><f:/texlive/2016/texmf-dist/fonts/type1/public/newtx/rtxmi7
 e/2016/texmf-dist/fonts/type1/public/newtx/txexs.pfb><f:/texlive/2016/texmf-dis
 t/fonts/type1/public/newtx/txsys.pfb><f:/texlive/2016/texmf-dist/fonts/type1/pu
 blic/newtx/zxlri.pfb>
-Output written on LaTeX1.pdf (4 pages, 618397 bytes).
+Output written on LaTeX1.pdf (4 pages, 610897 bytes).
 PDF statistics:
  302 PDF objects out of 1000 (max. 8388607)
  262 compressed objects within 3 object streams

@@ -31,7 +31,7 @@
 %\author{Chen Lin, Sheng Ni, Xiangxiang Zeng}
 \begin{abstract}
 %Factorization with Non-random Missing Label （FNRML）？
-We introduce a novel probabilistic model, \textbf{F}actorization with \textbf{N}on-random \textbf{M}issing \textbf{L}abels (FNML), for \textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) prediction. DTI prediction is usually modeled as a binary classification problem. Unlike previous studies which label unknown DTIs as negative samples, we assume the unknown DTIs are labels that are missing not at random. For example, the DTI labels are missing not at random if biomedical researchers priorize to study DTIS that are more likely to be positive. The proposed model, FNML models the generative process for the DTI labels and responses (i.e. the labels are given or missing). In particular, the probability of observing or missing a label is associated with the sign of the label. Experimental results show that FNML outperforms state-of-the-art methods.
+We introduce a novel probabilistic model, \textbf{F}actorization with \textbf{N}on-random \textbf{M}issing \textbf{L}abels (FNML), for \textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) prediction. DTI prediction is usually modeled as a binary classification problem. Unlike previous studies which label unknown DTIs as negative samples, we assume the unknown DTIs are labels that are missing not at random. For example, negative DTI labels are more likely to be missing because biomedical researchers priorize to study DTIS that are more likely to be positive. The proposed model, FNML models the generative process for the DTI labels (i.e. the labels are positive or negative) and responses (i.e. the labels are observed or missing). In particular, the probability of observing or missing a label is associated with the sign of the label. Experimental results show that FNML outperforms state-of-the-art methods.
 \end{abstract}
 
 
@@ -136,11 +136,11 @@ Direct optimization for both terms in Equ.~\ref{equ:loss} is intractable, as the
 
 It is convenient if $q(P|\theta),q(Z|\mu,\upsilon),q(\beta|\rho)$ are exponential distributions. We approximate the sigmoid function in Equ.~\ref{equ:p} by an exponential distribution. We use the property that any sigmoid function $\sigma(\cdot)$ has a lower bound:
 \begin{equation}
-Q(P|\theta)=\sigma(\theta)\geq \sigma(\zeta)\exp{(\theta-\zeta)/2-\lambda(\zeta)(\theta^2-\zeta^2)},
+q(P|\theta)=\sigma(\theta)\geq \sigma(\zeta)\exp{(\theta-\zeta)/2-\lambda(\zeta)(\theta^2-\zeta^2)},
 \end{equation}
 where $\lambda(\zeta)=[\sigma(\zeta)-1/2]/[2\zeta]$.
 
-As shown in Alg.~\ref{alg:model}, in each iteration of the inference we alternatively optimize the variational parameters for $q(Z),q(\beta), q(P)$ and the parameters for the lower bound $Q(P|\theta)$. We divide the data objects into two disjoint sets, $s_1 = \{(i,j)\in \mathcal{R}^{N\times M}|R_{i,j}=1\}$, and $s_2= \{(i,j)\in \mathcal{R}^{N\times M}|R_{i,j}=0\}$. In each iteration, we first obtain the optimal $\theta,\mu,v,\rho$ and then we update $\zeta$. The iteration is repeated until convergence is achieved.
+As shown in Alg.~\ref{alg:model}, in each iteration of the inference we alternatively optimize the variational parameters for $q(Z|\mu,\upsilon),q(\beta|\rho), q(P|\theta)$ and the parameters for the lower bound $\sigma(\zeta)$. We divide the data objects into two disjoint sets, $s_1 = \{(i,j)\in \mathcal{R}^{N\times M}|R_{i,j}=1\}$, and $s_2= \{(i,j)\in \mathcal{R}^{N\times M}|R_{i,j}=0\}$. In each iteration, we first obtain the optimal $\theta,\mu,v,\rho$ and then we update $\zeta$. The iteration is repeated until convergence is achieved.
 
 
 
@@ -239,7 +239,7 @@ The comparative performance on the full dataset are shown in Fig.~\ref{fig:full}
 
 \end{figure}
 
-The comparative performance on the sample dataset are shown in Fig.~\ref{fig:sample}. We can see that (1) FNML model achieves better AUPR than all state-of-the-art methods. The best comparative method is DTINet, which achieves $93.20\%$. Our FNML model obtains a $94.66\%$ AUPR. (2) Most of the state-of-the-art methods have a higher AUPR result on the sample dataset than the full dataset, due to the balanced ratio of positive and negative samples. (3) FNML model outperforms all state-of-the-art models in AUROC performance.  The best comparative method is again DTINet, which achieves $91.41\%$. Our FNML model obtains a $92.93\%$ AUROC.(4) Surprisingly, DeepWalk has a very low AUPR performance on the sample set. A possible reason is that the network representation extracted by deepwalk is based on homogeneous network structure, and thus is not accurate. Moreover, we use the public open source codes provided by authors in~\cite{Zong2017Deep}, which are not specifically tunned for the DrugBank dataset.
+The comparative performance on the sample dataset are shown in Fig.~\ref{fig:sample}. We can see that (1) FNML model achieves better AUPR than all state-of-the-art methods. The best comparative method is DTINet, which achieves $93.20\%$. Our FNML model obtains a $94.66\%$ AUPR. (2) Most of the state-of-the-art methods have a higher AUPR result on the sample dataset than the full dataset, due to the balanced ratio of positive and negative samples. (3) FNML model outperforms all state-of-the-art models in AUROC performance.  The best comparative method is again DTINet, which achieves $91.41\%$. Our FNML model obtains a $92.93\%$ AUROC. (4) Surprisingly, DeepWalk has a very low AUPR performance on the sample set. A possible reason is that the network representation extracted by deepwalk is based on homogeneous network structure, and thus is not accurate. Moreover, we use the public open source codes provided by authors in~\cite{Zong2017Deep}, which are not specifically tunned for the DrugBank dataset.
 
 \textbf{Stability.} We next study the stability of our FNML model. We use various combination of $X$ and $Y$ as inputs. That is, we extract X from the four networks on the drug side (i.e. dd,di,de,ds) respectively, extract Y from the three networks on the protein side (i.e. pp, pd, ps) respectively, and use the $12$ combinations as inputs to train the model. The predictions are tested on the full dataset.
 
@@ -290,7 +290,7 @@ We propose a novel DTI prediction model based on the assumption that unknown DTI
 \begin{thebibliography}{10}
 \bibitem{Ding2013Similarity}
 Ding, H., Takigawa, I., Mamitsuka, H., and Zhu, S.
-\newblock Similarity-based machine learning methods for predicting drug–target interactions: a brief review. \newblock In {\em Briefings in bioinformatics}, 15(5), 734-747.
+\newblock Similarity-based machine learning methods for predicting drug-target interactions: a brief review. \newblock In {\em Briefings in bioinformatics}, 15(5), 734-747.
 \bibitem{Peng2017Screening}
 Peng L, Zhu W, Liao B, et al.
 \newblock Screening drug-target interactions with positive-unlabeled learning.
