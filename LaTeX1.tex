@@ -118,7 +118,7 @@ The binary response is sampled from a Bernoulli distribution. The parameters of 
 \forall p\in \{0,1\}, \beta_p \sim Beta(\eta),\\
 \forall i,j, R_{i,j} \sim Bern (\beta_{P_{i,j},1}),
 \end{eqnarray}
-where $\eta$ is the hyperparameter for the Beta distribution.
+where $\eta\in\mathcal{R}^{2}$ is the hyperparameter for the Beta distribution.
 
 \subsection{Inference}\label{sec:inference}
 The objective is to maximize the likelihood which consists of two terms. The first term is on partial observations, i.e. $R_{i,j}=0$ and $P_{i,j}$ unknown. The second term is on full observations, i.e. $R_{i,j}=1$ and known $P_{i,j}$.
@@ -198,7 +198,7 @@ Sample & 708 & 1,512 & 1,923 & 1,923 & 1,066,650 \\\hline
 \textbf{Evaluation.} Throughout the experiment section, the major evaluation metric is \textbf{A}rea \textbf{U}nder \textbf{P}recision \textbf{R}ecall curve (AUPR), which is commonly adopted in bioinformatic studies. An auxiliary evaluation metric is \textbf{A}rea \textbf{U}nder \textbf{ROC} curve (AUROC).
 
 \subsection{Results and Analysis}
-\textbf{DTI Prediction Performance.} We first evaluate the accuracy of DTI prediction of the proposed FNML model. The number of dimensions for drug features are $K=100$, for target features $L=400$, hyper-parameters are $\sigma^2=1,\eta_{0,0}=1,\eta_{0,1}=1,\eta_{1,0}=1,\eta_{1,1}=1$. 
+\textbf{DTI Prediction Performance.} We first evaluate the accuracy of DTI prediction of the proposed FNML model. The number of dimensions for drug features are $K=100$, for target features $L=400$, hyper-parameters are $\sigma^2=1,\eta_{0}=1,\eta_{1}=1$. 
 
 We compare our FNML model with 5 state-of-the-art methods: (1) DeepWalk~\cite{Zong2017Deep}: a similarity-based drug-target prediction method that enhances similarity computation by deep learning method within a linked tripartite network. (2) HNM~\cite{Wang2014Drug}: a network model in which strength between a disease-drug pair is calculated through an iterative algorithm on the heterogeneous graph that also incorporates drug-target information. (3) NetLapRLS~\cite{Xia2010Semi}: a manifold regularization semi-supervised learning method. (4) PUDTI~\cite{Peng2017Screening}: an SVM-based optimization model that is trained on negative samples extracted based on positive-unlabeled learning. (5) DTINet~\cite{Luo2017Network}: a regression model that learns feature space mapping $Z$ by the loss function  $\min_{Z} \sum_{i,j}(P_{i,j}-(XZY)_{i,j})^2$. We do not change the default settings for all the above comparative methods.
 
