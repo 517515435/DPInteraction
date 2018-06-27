@@ -1,0 +1,263 @@
+\documentclass[11pt]{report}
+
+\usepackage{tikz}
+\usetikzlibrary{bayesnet}
+\begin{document}
+\section{model}
+\begin{figure}
+  \centering
+  \tikz{ %
+%hyper parameters
+  %latent nodes
+    \node[const] (x) {$x$} ; %
+    \node[const, right =of x] (y) {$y$};
+     \node[const, right =of y] (sigma) {$\sigma^2$};
+  	\node[latent, below = of sigma] (z) {$z$};
+       
+       %per interaction
+
+    \node[obs, below=2 of z](p){$p$};
+      \node[obs, below= of p] (r){$r$};
+ 
+	\node[latent, right = 2 of r] (beta){$\beta$};
+	\node[const,right = of beta](eta) {$\eta$};
+
+    \edge{x}{p};
+    \edge{sigma}{z};
+    \edge{y}{p};
+    \edge{z}{p};
+    \edge{p}{r};
+	\edge{beta}{r};
+	\edge{eta}{beta};
+
+ 
+  
+
+
+  
+     \plate[inner sep=0.2cm, xshift=-0.12cm, yshift=0.12 cm] {plate} {(p) (r)} {N}; 
+	 \plate[inner sep=0.2cm, xshift=-0.12cm, yshift=0.12 cm] {plate2} {(beta)} {2}; 
+
+ }
+\end{figure}
+
+\begin{eqnarray*}
+z\sim \mathcal{N}((0,\sigma^2)\\
+p(p=1)=\frac{1}{1+\exp{|XZY^{T}|}}\\
+\beta \sim Beta(\eta)\\
+r\sim Bern (\beta_p)
+\end{eqnarray*}
+
+\begin{eqnarray*}
+    p(R,P,Z,\beta|X,Y,\sigma^{2},\eta) = p(R|P,\beta)p(P|X,Y,Z)p(Z|\sigma^{2})p(\beta|\eta)
+\end{eqnarray*}
+\\
+\\
+Where:
+
+\begin{equation}
+    p(R|P,\beta) = [\beta_{1}^{R}(1-\beta_{1})^{1-R}]^{P}[\beta_{0}^{R}(1-\beta_{0})^{1-R}]^{1-P}
+\end{equation}
+
+\begin{eqnarray*}
+    p(P|X,Y,Z)&=&[\frac{1}{1+exp(-XZY^{T})}]^{P}[1-\frac{1}{1+exp(-XZY^{T})}]^{1-P} \\
+    &=& e^{XZY^{T}*P}*\frac{exp(-XZY^{T})}{1+exp(-XZY^{T})}\\
+    &\geq& e^{XZY^{T}*P}*\sigma(\xi)*exp\{-\frac{XZY^{T}+\xi}{2}-\lambda(\xi)((XZY^{T})^2-\xi^2)\}
+\end{eqnarray*}
+where $\lambda(\xi)=\frac{1}{2\xi}[\sigma(\xi)-\frac{1}{2}]$
+\begin{eqnarray*}
+    p(Z|\sigma^2)=\frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{Z^2}{2\sigma^2})\\
+    p(\beta_1|\eta_1)=Beta(\beta_1;\eta_{10},\eta_{11})\\
+    p(\beta_0|\eta_0)=Beta(\beta_0;\eta_{00},\eta_{01})
+\end{eqnarray*}
+\\
+\\
+For the convenience of calculation, the log of them:
+
+\begin{equation}
+    \ln p(R|P,\beta)=P[R\ln\beta_{1}+(1-R)\ln (1-\beta_{1})]+(1-P)[R\ln\beta_{0}+(1-R)\ln(1-\beta_{0})]
+\end{equation}
+
+\begin{equation}
+    \ln p(P|X,Y,Z)= XZY^{T} * P + \{-\frac{XZY^{T}+\xi}{2}-\lambda(\xi)((XZY^{T})^2-\xi^2)\}
+    +\ln \sigma(\xi)
+\end{equation}
+
+\begin{equation}
+    \ln p(Z|\sigma^{2})=-\frac{Z^2}{\sigma^2}-\ln\sigma
+\end{equation}
+\\
+\\
+Assume:
+
+\begin{equation}
+    q(P,Z,\beta|R,X,Y,\sigma^{2},\eta) = q(P|\lambda)q(Z|\mu,v)q(\beta|\rho)
+\end{equation}
+\\
+\\
+Then our goal is to maximize ELBO
+
+\begin{equation}
+    E_{q(Z,\beta)}[\ln p(R,P,Z,\beta)] -E_{q(Z,\beta)}[\ln q(Z,\beta)] + E_{q(Z,\beta ,P)}[\ln P(R,P,Z,\beta)] -E_{q(Z,\beta,P)}[\ln q(Z,\beta,P)]
+\end{equation}
+\\
+\\
+We defining $s_1$ as a subscript set with $1$ in $R$, and defining $s_2$ as a subscript set with $0$ in $R$.
+
+
+
+\subsection{Derivation of $\ln q(Z)$}
+
+\begin{eqnarray*}
+    \ln q(Z) 
+    &=& \textcolor{red}{\sum_{(R,P)\in s_1}E_{\beta}[\ln p(R,R,Z,\beta)}] + \sum_{(R)\in s_2}E_{\beta,P}[\ln p(R,P,Z,\beta) + const %\\
+    %&=& E_{\beta,P}[\ln p(R|P,\beta)]+E_{\beta,P}[\ln p(\beta|\eta)] \\
+    %&+& E_{\beta,P}[\ln p(P|X,Y,Z)]+E_{\beta,P}[\ln p(Z)]
+\end{eqnarray*}
+
+\begin{equation}
+    E_{\beta,P}[\ln p(R,P,Z,\beta) = E_{\beta,P}[\ln p(P|X,Y,Z)]+E_{\beta,P}[\ln p(Z)]+const
+\end{equation}
+
+%Only $E_{\beta,P}[\ln p(P|X,Y,Z)],E_{\beta,P}[\ln p(Z)]$ contain $Z$:
+\begin{equation}
+    E_{\beta,P}[\ln p(P|X,Y,Z)]=XZY^{T}*\lambda - \frac{XZY^{T}+\xi}{2}-\lambda(\xi)[(XZY^{T})^2-\xi^2]
+\end{equation}
+\begin{equation}
+    E_{\beta,P}[\ln p(R,P,Z,\beta)= XZY^{T}*\lambda - \frac{XZY^{T}}{2}-\lambda(\xi)(XZY^{T})^2-\frac{Z^2}{2\sigma^2}+const
+\end{equation}
+
+\begin{eqnarray*}
+E_{\beta}[\ln p(R,P,Z,\beta)] &=& E_{\beta}[\ln p(p|X,Y,Z)]+E_{\beta}[\ln p(Z)]+const \\
+&=& XZY^{T} - \frac{XZY^{T}}{2}-\lambda(\xi)(XZY^{T})^2-\frac{Z^2}{2\sigma^2}+const
+\end{eqnarray*}
+
+
+\begin{equation}
+    \ln q(Z_{mn})=[\sum_{(i,j)\in s_2}[(\lambda_{i,j}-\frac{1}{2})x_{im}*(y^{T})_{nj}]+\sum_{(i,j)\in s_1}\frac{1}{2}x_{im}*(y^{T})_{nj}]Z_{mn}-(\sum_{i,j}\lambda(\xi_{ij})*x^{2}_{im}*{(y^{T})_{nj}}^{2}+\frac{1}{\sigma^{2}})*Z^{2}_{mn}
+\end{equation}
+$Z_{mn}\sim N(\mu_{mn},v_{mn})$,so:
+\begin{equation}
+    v_{mn} = \frac{1}{\sqrt{[\sum_{i,j}\lambda(\xi_{ij})x^{2}_{im}{y_{jn}}^{2}+\frac{1}{\sigma^2}]*2}}
+\end{equation}
+\begin{equation}
+    \mu_{mn} =\frac{\sum_{(i,j)\in s_2}[(\lambda_{i,j}-\frac{1}{2})x_{im}*y_{jn}]+\sum_{(i,j)\in s_1}\frac{1}{2}x_{im}*y_{jn}}{2*(\sum_{i}\sum_{j}\lambda(\xi_{ij})x^{2}_{im}{y_{jn}}^{2}+\frac{1}{\sigma^2})}
+\end{equation}
+
+
+
+\subsection{Derivation of $\ln q(\beta)$}
+\begin{eqnarray*}
+    \ln q(\beta) 
+    &=& \textcolor{red}{\sum_{(R,R)\in s_1}E_{Z}{\ln p(R,P,Z,\beta)} + \sum_{(R)\in s_2}E_{Z,P}{\ln p(R,P,Z,\beta)} + const }%\\
+%    &+& E_{Z,P}[\ln p(R|P,\beta)]+E_{Z,P}[\ln p(\beta|\eta)] \\ 
+ %   &+&E_{Z,P}[\ln p(P|X,Y,Z)]+E_{Z,P}[\ln p(Z)]
+\end{eqnarray*}
+Only $\textcolor{red}{E_{Z}[\ln p(R|P,\beta)]}, E_{Z,P}[\ln p(R|P,\beta)],\textcolor{red}{2}*E_{Z,P}[\ln p(\beta|\eta)]$ contain $\beta$:
+\begin{eqnarray*}
+    E_{Z,P}[\ln p(R|P,\beta)]&=&\lambda[R\ln\beta_{1}+(1-R)\ln (1-\beta_{1})]\\
+    &+& (1-\lambda)[R\ln\beta_{0}+(1-R)\ln(1-\beta_{0})]
+\end{eqnarray*}
+
+\begin{eqnarray*}
+    E_{Z,P}[\ln p(\beta|\eta)] &=& \ln \Gamma(\eta_{10}+\eta_{11}) - \ln \Gamma(\eta_{10})-\ln\Gamma(\eta_{11}) \\
+    &+& (\eta_{10}-1)\ln\beta_{1}+(\eta_{11}-1)\ln(1-\beta_1) \\
+    &+&\ln \Gamma(\eta_{00}+\eta_{01}) - \ln \Gamma(\eta_{00})-\ln\Gamma(\eta_{01}) \\
+    &+&(\eta_{00}-1)\ln\beta_{0}+(\eta_{01}-1)\ln(1-\beta_0)
+\end{eqnarray*}
+
+\begin{eqnarray*}
+E_{Z}[\ln p(R|P,\beta)] &=&P[R\ln\beta_{1}+(1-R)\ln (1-\beta_{1})]\\
+    &+& (1-P)[R\ln\beta_{0}+(1-R)\ln(1-\beta_{0})]
+\end{eqnarray*}
+
+
+\begin{eqnarray*}
+    \ln q(\beta) &=& \sum_{(R)\in s_2}\lambda[R\ln\beta_{1}+(1-R)\ln (1-\beta_{1})] +(1-\lambda)[R\ln\beta_{0}+(1-R)\ln(1-\beta_{0})] \\
+    &+& \sum_{(R,P)\in s_1}P[R\ln\beta_{1}+(1-R)\ln (1-\beta_{1})] +(1-P)[R\ln\beta_{0}+(1-R)\ln(1-\beta_{0})] \\
+    &+& [\ln \Gamma(\eta_{10}+\eta_{11}) - \ln \Gamma(\eta_{10})-\ln\Gamma(\eta_{11}) \\
+    &+& (\eta_{10}-1)\ln\beta_{1}+(\eta_{11}-1)\ln(1-\beta_1) \\
+    &+&\ln \Gamma(\eta_{00}+\eta_{01}) - \ln \Gamma(\eta_{00})-\ln\Gamma(\eta_{01}) \\
+    &+&(\eta_{00}-1)\ln\beta_{0}+(\eta_{01}-1)\ln(1-\beta_0)]
+\end{eqnarray*}
+Remove irrelevant items:
+
+\begin{eqnarray*}
+    \ln q(\beta) &=& (\sum_{(R)\in s_2}\lambda R + \sum_{(R,P)\in s_1}PR +\eta_{10}-1)\ln{\beta_{1}}\\
+    &+&[\sum_{(R)\in s_2}\lambda (1-R) + \sum_{(R,P)\in s_1}P(1-R)+\eta_{11}-1]\ln(1-\beta_{1})\\
+    &+&[\sum_{(R)\in s_2}(1-\lambda)R + \sum_{(R,P)\in s_1}(1-P)R +\eta_{00}-1]\ln{\beta_0}\\
+    &+&[\sum_{(R)\in s_2}(1-\lambda)(1-R) + \sum_{(R,P)\in s_1}(1-P)(1-R) +\eta_{01}-1]\ln(1-\beta_{0})
+\end{eqnarray*}
+\\
+\\
+so we get:
+
+\begin{equation}
+    \rho_{00} = \sum_{(R)\in s_2}(1-\lambda)R + \sum_{(R,P)\in s_1}(1-P)R +\eta_{00}
+\end{equation}
+
+\begin{equation}
+    \rho_{01} = \sum_{(R)\in s_2}(1-\lambda)(1-R) + \sum_{(R,P)\in s_1}(1-P)(1-R) +\eta_{01}
+\end{equation}
+
+\begin{equation}
+    \rho_{10} = \sum_{(R)\in s_2}\lambda R + \sum_{(R,P)\in s_1}PR +\eta_{10}
+\end{equation}
+
+\begin{equation}
+    \rho_{11} = \sum_{(R)\in s_2}\lambda (1-R) + \sum_{(R,P)\in s_1}P(1-R)+\eta_{11}
+\end{equation}
+
+
+\begin{equation}
+    \beta_{0} \sim Beta(\rho_{00}, \rho_{01})
+\end{equation}
+\begin{equation}
+    \beta_{1} \sim Beta(\rho_{10}, \rho_{11})
+\end{equation}
+
+
+
+
+\subsection{Derivation of $\ln q(P)$}
+\begin{eqnarray*}
+\ln q(P) &=& E_{Z,\beta}(\ln p(R,P,Z,\beta) \\
+    &=& E_{Z,\beta}[\ln p(R|P,\beta)]+E_{Z,\beta}[\ln p(\beta|\eta)]+E_{Z,\beta}[\ln p(P|X,Y,Z)]+E_{Z,\beta}[\ln p(Z)] \\
+    &=& E_{Z,\beta}[\ln p(R|P,\beta)]+E_{Z,\beta}[\ln p(P|X,Y,Z)]
+\end{eqnarray*}
+Only $E_{Z,\beta}[\ln p(R|P,\beta)],E_{Z,\beta}[\ln p(P|X,Y,Z)]$ contain $P$:
+\begin{equation}
+    E_{Z,\beta}[\ln p(R|P,\beta)]=P*E_{
+    \beta_1}[R\ln\beta_{1}+(1-R)\ln (1-\beta_{1})]+(1-P)*E_{
+    \beta_0}[R\ln\beta_{0}+(1-R)\ln(1-\beta_{0})]
+\end{equation}
+\begin{equation}
+    E_{Z,\beta}[\ln p(P|X,Y,Z)] = P*E_{Z}(XZY^{T})
+\end{equation}
+Because $E(\ln{\beta})=\psi(\alpha)-\psi(\alpha+\beta)$,$E(\ln(1-\beta))=\psi(\beta)-\psi(\alpha+\beta)$,so we get $\ln(q(R))$:
+\begin{eqnarray*}
+   \ln q(P) &=& P*[R*\psi(\rho_{10})+(1-R)*\psi(\rho_{11})-\psi(\rho_{10}+\rho_{11})] \\
+   &+& (1-P)*[R*\psi(\rho_{00})+(1-R)*\psi(\rho_{01})-\psi(\rho_{00}+\rho_{01})]+P*X\mu_{z}Y \\
+   &=& P*\ln[exp(R*\psi(\rho_{10}))*exp[(1-R)*\psi(\rho_{11})]*exp(-\phi(\rho_{10}+\rho_{11}))*exp(X\mu_{z}Y)] \\
+   &+& (1-P)*\ln[exp(R*\psi(\rho_{00}))*exp[(1-R)*\psi(\rho_{01})]*exp(-\phi(\rho_{00}+\rho_{01}))]
+\end{eqnarray*}
+we define:
+\begin{eqnarray*}
+    l_1 = exp(R*\psi(\rho_{10}))*exp[(1-R)*\psi(\rho_{11})]*exp(-\psi(\rho_{10}+\rho_{11}))*exp(X_{i}\mu_{z}(Y_{j})^{T}) \\
+     l_2 = exp(R*\psi(\rho_{00}))*exp[(1-R)*\psi(\rho_{01})]*exp(-\psi(\rho_{00}+\rho_{01}))
+\end{eqnarray*}
+So we get:
+\begin{equation}
+    \lambda = \frac{l_1}{l_1+l_2}
+\end{equation}
+Where $\frac{1}{exp(\psi(x))} \sim \frac{1}{x}+\frac{1}{2*x^{2}}+\frac{5}{4*3!*x^{3}}+\frac{3}{2*4!*x^{4}}$.
+\subsection{Derivation of $\xi$}
+For variational parameters $\xi$:
+\begin{equation}
+    maxmize \ln{\sigma(\xi)}-\frac{\xi}{2}-\lambda(\xi)[(XZY^{T})^2-\xi^2]
+\end{equation}
+$[\ln{\sigma(\xi)}-\frac{\xi}{2}-\lambda(\xi)[(XZY^{T})^2-\xi^2]]'=0$
+
+Then we get $\xi_{ij}^{2}=(x_{i}z(y_{j})^T)^2$
+
+\end{document}
