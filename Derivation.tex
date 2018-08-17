@@ -77,6 +77,14 @@ For the convenience of calculation, the log of them:
 \begin{equation}
     \ln p(R|P,\beta)=P[R\ln\beta_{1}+(1-R)\ln (1-\beta_{1})]+(1-P)[R\ln\beta_{0}+(1-R)\ln(1-\beta_{0})]
 \end{equation}
+\begin{equation}
+    p(r_{ij}=1)=\sum_p p(r_{ij}=1|p_{ij})p(p_{ij}) = \beta_{1}\frac{1}{1+\exp{(-XYZ)}_{ij}}+\beta_{0}\frac{\exp{(-XYZ)}_{ij}}{1+\exp{(-XYZ)}_{ij}}
+\end{equation}
+
+\begin{equation}
+    p(r_{ij}=1)=\sum_p p(r_{ij}=1|p_{ij},\beta)p(p_{ij})p(\beta) = \beta_{11}\frac{1}{1+\exp{-XYZ}_{ij}}p(\beta)+\beta_{01}\frac{\exp{-XYZ}_{ij}}{1+\exp{-XYZ}_{ij}}p(\beta)
+r_{ij}=p(r_{ij}=1)
+\end{equation}
 
 \begin{equation}
     \ln p(P|X,Y,Z)= XZY^{T} * P + \{-\frac{XZY^{T}+\xi}{2}-\lambda(\xi)((XZY^{T})^2-\xi^2)\}
