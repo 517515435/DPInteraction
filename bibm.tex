@@ -34,7 +34,7 @@
 
 \maketitle
 
-\begin{abstract}\textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) prediction plays an important role in drug discovery and drug repurposing. DTI prediction is usually modeled as a binary classification problem. Unlike previous studies which label unknown DTIs as negative samples, we assume the unknown DTIs are labels that are missing not at random. For example, negative DTI labels are more likely to be missing because biomedical researchers prioritize to study DTIs that are more likely to be positive. We introduce a novel probabilistic model, \textbf{F}actorization with \textbf{N}on-random \textbf{M}issing \textbf{L}abels (FNML), for DTI prediction.  FNML models the generative process for the DTI labels (i.e. the labels are positive or negative) and responses (i.e. the labels are observed or missing). In particular, the probability of observing or missing a label is associated with the sign of the label. In order to futher reduce prediction variance and improve prediction accuracy on highly imbalanced DTI dataset, we present FNML-EN, an ensemble scheme which is designed specifically for FNML model. Experimental results on the latest DTI database show that FNML-EN outperforms state-of-the-art methods. We also conduct comprehensive experiments to validate the robust performance of the proposed models.
+\begin{abstract}\textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) prediction plays an important role in drug discovery and drug repurposing. DTI prediction is usually modeled as a binary classification problem. Unlike previous studies which label unknown DTIs as negative samples, we assume the unknown DTIs are labels that are missing not at random. For example, negative DTI labels are more likely to be missing because biomedical researchers prioritize to study DTIs that are more likely to be positive. We introduce a novel probabilistic model, \textbf{F}actorization with \textbf{N}on-random \textbf{M}issing \textbf{L}abels (FNML), for DTI prediction.  FNML models the generative process for the DTI labels (i.e. the labels are positive or negative) and responses (i.e. the labels are observed or missing). In particular, the probability of observing or missing a label is associated with the sign of the label. In order to further reduce prediction variance and improve prediction accuracy on highly imbalanced DTI dataset, we present FNML-EN, an ensemble scheme which is designed specifically for FNML model. Experimental results on the latest DTI database show that FNML-EN outperforms state-of-the-art methods. We also conduct comprehensive experiments to validate the robust performance of the proposed models.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -176,15 +176,15 @@ As shown in Alg.~\ref{alg:model}, in each iteration of the inference we alternat
 \end{algorithm}
 
 \subsection{Model Ensemble}
-As previously shown, FNML model has the advantage of debiasing the labels by utilizing the non-randomly missingness of responses. However, due to the severe sparsity of available responses in DTI database, the prediction of FNML can still be of high variance and over-fit the training set. ITo tackle this problem, we propose FNML-EN, an ensemble algorithm which is specifically designed for FNML model.
+As previously shown, FNML model has the advantage of debasing the labels by utilizing the non-randomly missingness of responses. However, due to the severe sparsity of available responses in DTI database, the prediction of FNML can still be of high variance and over-fit the training set. To tackle this problem, we propose FNML-EN, an ensemble algorithm which is specifically designed for FNML model.
 
 %+reference
-FNML-EN is inspired by the well-known boosting algorithm~\cite{boosting}, and the SMOTE~\cite{} oversampling techniqe which has been successufully applied in many imbalanced classification problems. Recall that in boosting, training instances are iteratively re-weighted on the basis of classification error. In FNML-EN, an iterative reweighing framework is also adopted. In the $t-$th round, we run FNML on the current training set to obtain the prediction of labels (i.e. $p_{i,j}=p(P_{i,j}=1|X,Y,Z)$) and prediction of responses (i.e. $r_{i,j}=p(R_{i,j}=1|P_{i,j},\beta,\eta)$). We then sort each training instance (i.e. drug-target pair $(i,j)$) in descending order of $p_{i,j}$ to get its rank (denoted as $rank_{i,j}$). Finally, we sample with replacemnent positive instances based on the $s{i,j}$, which is defined as:
+FNML-EN is inspired by the well-known boosting algorithm~\cite{Boosting}, and the SMOTE~\cite{SMOTE} oversampling technique which has been successfully applied in many imbalanced classification problems. Recall that in boosting, training instances are iteratively re-weighted on the basis of classification error. In FNML-EN, an iterative reweighing framework is also adopted. In the $t-$th round, we run FNML on the current training set to obtain the prediction of labels (i.e. $p_{i,j}=p(P_{i,j}=1|X,Y,Z)$) and prediction of responses (i.e. $r_{i,j}=p(R_{i,j}=1|P_{i,j},\beta,\eta)$). We then sort each training instance (i.e. drug-target pair $(i,j)$) in descending order of $p_{i,j}$ to get its rank (denoted as $rank_{i,j}$). Finally, we sample with replacement positive instances based on the $s{i,j}$, which is defined as:
 \begin{equation}\label{equ:sample}
     s(i,j) = \frac{ln(\frac{rank_{i,j}}{r_{i,j}})}{\sum_{i,j}{ln(\frac{rank_{i,j}}{r_{i,j}})}}
 \end{equation}
 
-As in SMOTE~\cite{}, we will add the synthetic data point to the original set to form a new training set for the $t+1$ round. In the experiment, the number of sampled instances is equivalent to the number of positive labeled instances in the groundtruth. For example, if there are $n$ positive DTI pairs in the original dataset, then in each round we will have $2\times n$ positive DTI pairs in the training set. The iteration is terminated after $I$ rounds, and the final prediction is made by averaging the results of all FNML models. 
+As in SMOTE~\cite{SMOTE}, we will add the synthetic data point to the original set to form a new training set for the $t+1$ round. In the experiment, the number of sampled instances is equivalent to the number of positive labeled instances in the groundtruth. For example, if there are $n$ positive DTI pairs in the original dataset, then in each round we will have $2\times n$ positive DTI pairs in the training set. The iteration is terminated after $I$ rounds, and the final prediction is made by averaging the results of all FNML models. 
 
 Now let's take a closer look into the sampling weight Equ.~\ref{equ:sample}. The possibility of a positive training instance being sampled is increased if it is classified wrongly (i.e. smaller $p_{i,j}$ and henceforth with larger $rank_{i,j}$). We use the predicted response to further adapt to FNML at each round. We will validate the effect of $r_{i,j}$ in our sampling strategy in Sec.~\ref{sec:experiment}. 
 
@@ -296,7 +296,7 @@ We compare the AUPR and AUROC performance of FNML and DTINet. As shown in Fig.~\
 \label{fig:stabilityauroc}
 }
 \vspace*{-10pt}
-\caption{FNML model consistenly outperforms DTINet with different feature inputs.}\label{fig:stability}
+\caption{FNML model consistently outperforms DTINet with different feature inputs.}\label{fig:stability}
 \end{figure}
 
 
@@ -320,7 +320,7 @@ We compare the AUPR and AUROC performance of FNML and DTINet. As shown in Fig.~\
 \textbf{Performance of Ensemble Model.} 
 We conduct experiment on full dataset to evaluate our proposed ensemble model. We use the same hyper-parameters settings and number of feature dimensions for drugs and proteins.
 
-For a detailed study, we compare the AUPR and AUROC performance of FNML and FNML-EN, with different feature combinations. The results are shown in Fig.~\ref{fig:stability-EN}. We can see that our ensemble model FNML-EN generates better restults in terms of AUPR and AUROC for all input features. This result shows that our ensemble model FNML-EN can robustly enhance FNML.
+For a detailed study, we compare the AUPR and AUROC performance of FNML and FNML-EN, with different feature combinations. The results are shown in Fig.~\ref{fig:stability-EN}. We can see that our ensemble model FNML-EN generates better results in terms of AUPR and AUROC for all input features. This result shows that our ensemble model FNML-EN can robustly enhance FNML.
 
 
 \begin{figure}[!ht]
@@ -343,7 +343,7 @@ For a detailed study, we compare the AUPR and AUROC performance of FNML and FNML
 Here we conduct an experiment to verify the effectiveness of our sampling strategy (Equ.~\ref{equ:sample}).  We compare the performances of our sampling strategy with the following two sampling strategies: (1) FNML-RS: randomly sample the same size sample from the positive sample, and then combine with the original positive sample to form a new positive sample.  (2) FNML-SR: sample positive instances according to $
 s_{1}(i,j) = \frac{ln(rank_{i,j})}{\sum_{i,j}{ln(rank_{i,j})}}$. 
 
-The results are shown in Fig.~\ref{fig:samplingstrategy}. We can see that: (1) The AUROC values of the three methods are not much different. (2) Our sampling strategy outperforms FNML-RS and FNML-SR in terms of AUPR. Our FNML-EN gets a 49.88\% AUPR and FNML-SR gets a 48.06\% AUPR, which validate our assumption that response probability $r_{i,j}$ plays a key role in the sampling procedure.
+The results are shown in Fig.~\ref{fig:samplingstrategy}. We can see that: (1) The AUROC values of the three methods are not much different. (2) Our sampling strategy outperforms FNML-RS and FNML-SR in terms of AUPR. Our FNML-EN gets a 50.92\% AUPR and FNML-SR gets a 49.06\% AUPR, which validate our assumption that response probability $r_{i,j}$ plays a key role in the sampling procedure.
 
 \begin{figure}[t]
 \centering
@@ -361,18 +361,18 @@ The results are shown in Fig.~\ref{fig:samplingstrategy}. We can see that: (1) T
 \end{figure}
 
 \textbf{Comparable Performance of Ensemble model.} 
-Finally, we compare our ensemble model with other ensemble models. We consider the ensemble of two weak learners. (1) Bagging. We sample the training set with replacement to generate two new training sets, and use these two new training sets to train two FNML models. After that, we average the output of two FNML models to get final result. (2) Bagging With Over Simpling (BaggingOS). For a fair comparison, we also over-sample the positive instances in the training sets, and then perform bagging to output an aggregated prediction. (3) Boosting. Consider our model as a classifier and use the standard boosting framework to get the boosting ensemble of FNML model. 
+Finally, we compare our ensemble model with other ensemble models. We tuned the number of weak learners $N$ from $2$ to $6$. (1) Bagging~\cite{Bagging}. We sample the training set with replacement to generate $N$ new training sets, and use these $N$ new training sets to train $N$ FNML models. After that, we average the output of $N$ FNML models to get final result. (2) Bagging With Over Simpling (BaggingOS). For a fair comparison, we also over-sample the positive instances in the training sets, and then perform bagging to output an aggregated prediction. (3) Boosting. Consider our model as a classifier and use the standard boosting framework to get the boosting ensemble of FNML model.  
 
-The comparative performance on full dataset is shown in Fig.~\ref{fig:ensemblecompare}. We can see that (1) FNML-EN achieves best AUPR and AUROC results, compared with bagging and boosting method. (2) The result of Bagging is relatively poor, because the dataset is highily imbalanced. The positive samples are not fully utilized due to the sampling procedure. (3) The result of BaggingOS is better than Bagging, because over-sampling the positive instances generates accurate predictions to fully utilize information in the training data. (4) The result of boosting is not good, indicating that treating positive and negative samples equally is not applicable to highly imbalanced data.
+The comparative performance on full dataset is shown in Fig.~\ref{fig:ensemblecompare}. We can see that (1) FNML-EN achieves best AUPR and AUROC results, compared with bagging and boosting method with different number of weak learners $N$. (2) The result of Bagging is relatively poor, because the dataset is highly imbalanced. The positive samples are not fully utilized due to the sampling procedure. (3) The result of BaggingOS is better than Bagging, because over-sampling the positive instances generates accurate predictions to fully utilize information in the training data. (4) The result of boosting is not good, indicating that treating positive and negative samples equally is not applicable to highly imbalanced data. (5) As the $N$ increases, the performance of our models does not differ much. When $N=4$, our model get highest AUPR (50.92\%).
 \begin{figure}[t]
 \centering
 \scalebox{0.8}{
 \subfigure[AUPR]{
-\includegraphics[width=5cm,height=3.5cm]{Ensemble_TraditionalEnsembleAUPR.eps}
+\includegraphics[width=5cm,height=3.5cm]{Ensemble_TraditionalEnsembleLineAUPR.eps}
 \label{fig:allaupr}
 }
 \subfigure[AUROC]{
-\includegraphics[width=5cm,height=3.5cm]{Ensemble_TraditionalEnsembleAUROC.eps}
+\includegraphics[width=5cm,height=3.5cm]{Ensemble_TraditionalEnsembleLineAUROC.eps}
 \label{fig:allauroc}
 }}
 \vspace*{-10pt}
@@ -408,20 +408,16 @@ Peng L, Zhu W, Liao B, et al.
 \newblock Screening drug-target interactions with positive-unlabeled learning.
 \newblock In {\em Scientific Reports}, 2017, 7(1): 8087.
 
+
+
+\bibitem{Boosting}
+Schapire R E. 
+\newblock The Boosting Approach to Machine Learning: An Overview
+\newblock In {\em Nonlinear Estimation and Classification}. Springer New York, 2003:149-171.
+
 \bibitem{Little1987Statistical}
 R. J. A. Little and D. B. Rubin.
 \newblock Statistical Analysis with Missing Data, 1987.
-
-\bibitem{Hattori2003Drug}
-Hattori, M., Okuno, Y., Goto, S.  Kanehisa, M. 
-\newblock Development of a chemical structure comparison method for integrated analysis of chemical and genomic information in the metabolic pathways. 
-\newblock In {\em Journal of the American Chemical Society} 125, 11853–11865 (2003).
-
-\bibitem{Smith1981Protein}
-Smith, T. F. and Waterman, M. S. 
-\newblock Identification of common molecular subsequences. 
-\newblock In {\em Journal of molecular biology} 147, 195–197 (1981).
-
 
 \bibitem{Cho2015DCA}
 Cho H, Berger B, Peng J. 
@@ -434,20 +430,28 @@ Bishop C M.
 \newblock Pattern Recognition and Machine Learning. 
 \newblock In {\em Information Science and Statistics}. Springer-Verlag New York, Inc. 2006.
 
-\bibitem{Bagging}
-Breiman L. 
-\newblock Bagging predictors. 
-\newblock In {\em Machine Learning}, 1996, 24(2):123-140.
+\bibitem{SMOTE}
+Chawla N V, Bowyer K W, Hall L O, et al. \newblock SMOTE: synthetic minority over-sampling technique[J].
+\newblock In {\em Journal of Artificial Intelligence Research}, 2002, 16(1):321-357.
 
-\bibitem{Boosting}
-Schapire R E. 
-\newblock The Boosting Approach to Machine Learning: An Overview
-\newblock In {\em Nonlinear Estimation and Classification}. Springer New York, 2003:149-171.
+
 
 \bibitem{Knox2011DrugBank}
 Knox C, Law V, Jewison T, et al. 
 \newblock DrugBank 3.0: a comprehensive resource for ‘Omics’ research on drugs. 
 \newblock In {\em Nucleic Acids Research}, 2011, 39(Database issue):D1035.
+
+\bibitem{Hattori2003Drug}
+Hattori, M., Okuno, Y., Goto, S.  Kanehisa, M.
+\newblock Development of a chemical structure comparison method for integrated analysis of chemical and genomic information in the metabolic pathways. 
+\newblock In {\em Journal of the American Chemical Society} 125, 11853–11865 (2003).
+
+
+\bibitem{Smith1981Protein}
+Smith, T. F. and Waterman, M. S. 
+\newblock Identification of common molecular subsequences. 
+\newblock In {\em Journal of molecular biology} 147, 195–197 (1981).
+
 
 \bibitem{Davis2012DrugDisease}
 Davis, A. P., Murphy, C. G., Johnson, R., Lay, J. M., Lennon-Hopkins, K., Saraceni- Richards, C., Sciaky, D., King, B. L. Rosenstein, M. C., Wiegers, T. C., et al. 
@@ -464,6 +468,7 @@ Kuhn, M., Campillos, M., Letunic, I., Jensen, L. J., and Bork, P.
 Keshava Prasad T S, Goel R, Kandasamy K, et al. 
 \newblock Human Protein Reference Database--2009 update.
 \newblock {\em Nucleic Acids Research}, 2009, 37(Database issue):767-72.
+
 
 \bibitem{Zong2017Deep}
 Zong N, Kim H, Ngo V, et al. 
@@ -482,6 +487,12 @@ Wang W, Yang S, Zhang X, et al.
 Xia Z, Wu L Y, Zhou X, et al. 
 \newblock Semi-supervised drug-protein interaction prediction from heterogeneous biological spaces. 
 \newblock In {\em Bmc Systems Biology}, 2010, 4(S2):1-16.
+
+
+\bibitem{Bagging}
+Breiman L. 
+\newblock Bagging predictors. 
+\newblock In {\em Machine Learning}, 1996, 24(2):123-140.
 
 \end{thebibliography}
 %\balancecolumns
