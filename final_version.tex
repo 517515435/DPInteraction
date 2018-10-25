@@ -1,0 +1,500 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage[linesnumbered,boxed]{algorithm2e}
+\usepackage{subfigure}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usetikzlibrary{bayesnet}
+
+\newenvironment{shrinkeq}[1]
+{ \bgroup
+  \addtolength\abovedisplayshortskip{#1}
+  \addtolength\abovedisplayskip{#1}
+  \addtolength\belowdisplayshortskip{#1}
+  \addtolength\belowdisplayskip{#1}}
+{\egroup\ignorespacesafterend}
+
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Drug Target Interaction Prediction with Non-random Missing Labels}
+
+\author{\IEEEauthorblockN{Sheng Ni, Chen Lin, Xiangxiang Zeng}
+\IEEEauthorblockA{\textit{Department of Computer Science,} \\
+\textit{Xiamen University}\\
+Xiamen, China \\
+chenlin@xmu.edu.cn}
+\and
+\IEEEauthorblockN{Yun Liang}
+\IEEEauthorblockA{\textit{Department of Information} \\
+\textit{South China Agricultural University}\\
+Guangzhou, China}
+}
+
+\maketitle
+
+\begin{abstract}\textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) prediction plays an important role in drug discovery and drug repurposing. DTI prediction is usually modeled as a binary classification problem. Unlike previous studies which label unknown DTIs as negative samples, we assume the unknown DTIs are labels that are missing not at random. For example, negative DTI labels are more likely to be missing because biomedical researchers prioritize to study DTIs that are more likely to be positive. We introduce a novel probabilistic model, \textbf{F}actorization with \textbf{N}on-random \textbf{M}issing \textbf{L}abels (FNML), for DTI prediction.  FNML models the generative process for the DTI labels (i.e. the labels are positive or negative) and responses (i.e. the labels are observed or missing). In particular, the probability of observing or missing a label is associated with the sign of the label. We also conduct comprehensive experiments to validate the robust performance of the proposed models.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Missing Not At Random, Drug Target Interaction Prediction, Probabilistic Factor Models
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+\textbf{D}rug-\textbf{T}arget \textbf{I}nteraction (DTI) is fundamental to drug discovery and design. As biochemical experimental methods for DTI identification are extremely costly and time-consuming, computational DTI prediction methods have received a growing popularity in literature. Traditional computational methods to predict DTIs mainly include ligand-based methods~\cite{Keiser2007ligand} and molecule docking methods~\cite{Cheng2007docking}. Ligand-based methods are ineffective when target proteins have little binding ligands , while molecular docking methods are computationally costly and fail to offer accurate predictions when 3D structures of target proteins are not available~\cite{Chen2016docking}. To overcome these problems, many machine learning-based methods have been proposed for inferring DTI. The majority of existing machine learning-based methods treat DTI prediction as a binary classification task, where known DTIs are labeled as positive and unknown DTIs are labeled as negative~\cite{Ding2013Similarity}. To address the imbalanced problem arised from the binary classification scheme, many research has attempted to extract a subset of reliable negative samples, e.g. by random sampling~\cite{Luo2017Network} or by \textbf{P}ositive \textbf{U}nlabel \textbf{L}earning (PU Learning)~\cite{Peng2017Screening}.
+
+
+Instead of labeling the unknown DTIs as negative, we argue that it is more natural to consider the unknown DTIs, i.e. DTIs that are neither identified in vivo to be positive nor experimentally validated to be negative (non-interacting drug-target pairs), as missing labels. Furthermore, our assumption in this work is that labels are not missing at random. This is an intuitive and reasonable assumption, because researchers will use their domain expertise to filter DTIs with a high possibility to be positive and prioritize validations for these DTIs in vivo. For example, researchers find the efficacy target of a drug based on principles of biochemistry, biophysics, genetics and chemical biology. If ample evidences exist to support positive interactions with the target, then the possibility of a positive DTI is high, and the researchers are likely to conduct in vivo experiments. On the contrary, drug target interactions that are less likely to be positive are more likely to be ignored by researchers and their labels are likely to be missing.
+\subsection{Contribution}
+
+Our contribution in this work is a novel \textbf{F}actorization with \textbf{N}on-random \textbf{M}issing \textbf{L}abels model (FNML). To the best of our knowledge, this is the first time missing not at random theory is applied in DTI identification. The inputs of FNML are feature vectors of drugs and targets, the partially observed labels, and the fully observed responses (i.e. labels are given or missing). We allow the feature vectors to be learnt and/or integrated from heterogenous sources. The labels and responses are binary variables. The FNML model mimics the probabilistic procedures to generate labels from feature vectors and responses from labels. Specifically, the labels are related to feature vectors of both drugs and targets, and a hidden matrix mapping from the drug features to target features. The possibility of giving a response is associated with the sign of the label.
+
+We conduct comprehensive experiments on the latest DTI database. Experimental results show that the FNML model outperforms state-of-the-art DTI prediction methods in terms of \textbf{A}rea \textbf{U}nder \textbf{R}eceiver \textbf{O}perating \textbf{C}haracteristic curve (AUROC) and \textbf{A}rea \textbf{U}nder \textbf{P}recision \textbf{R}ecall curve (AUPR), which are the most commonly adopted metrics to evaluate DTI prediction performance. We also show that our models provide robust performance enhancement, despite of the input features.
+
+\subsection{Related Work}
+
+One component of our work (i.e labels are generated by feature vectors learnt and fused from heterogenous information networks) is inspired by a recent work DTINet~\cite{Luo2017Network}. However, there are three key differences between our work and DTINet. (1) DTINet is based on deterministic matrix factorization, our work is based on probabilistic factor models. For example, the hidden feature space mapping matrix, labels, and responses are all random variables. This setting enables the FNML model to regulate the parameters (i.e. hidden feature space mapping matrix) by introducing appropriate priors. Therefore, performance on sparse dataset is improved. (2) DTINet is based on randomly missing responses, i.e. it samples uniformly a set of unknown DTIs as negative sample, while FNML is based on missing not at random theories. Statistical theory in~\cite{Little1987Statistical} shows that applying a model based on missing at random assumptions can lead to biased parameter estimation on data sets with missing not at random entries. (3) DTINet adopts only a subset of unknown DTIs to preserve a balanced number of positive and negative samples, while our model uses all information in the data set.
+
+We also want to distinguish our work with another line of research. Usually only positive DTIs are deposited in known databases. Due to the lack of negative samples, PU learning has been employed in DTI identification, e.g. to facilitate negative sample extraction~\cite{Peng2017Screening}. PU learning does not explicitly associate the status of an instance (i.e. being labeled or unlabeled) with the value of its label. We also want to mention here that, although we experiment with datasets where only positive DTIs are deposited, FNML is extendable without difficulty to databases where positive and negative DTIs are available. Thus our model is applicable in more scenarios.
+
+
+\section{The Proposed Method}\label{sec:method}
+We start with the problem definitions and notations in Sec.~\ref{sec:input}. We then describe the proposed model FNML in Sec.~\ref{sec:model}. Finally we present the inference algorithm in Sec.~\ref{sec:inference}.
+
+\subsection{Preliminaries}\label{sec:input}
+DTI identification is often modeled as a binary classification task. Formally, we are given $P\in \mathcal{R}^{N\times M}$ a set of DTI labels, where $p_{i,j}=0$ indicates a negative interaction between drug $i$ and target $j$, $p_{i,j}=1$ indicates a positive DTI, the feature vectors on drug side $X\in \mathcal{R}^{N \times K}$, where $x_{i,k}$ represents drug $i$'s weight on drug feature $k$, the feature vectors on target side $Y\in \mathcal{R}^{M \times L}$, where $y_{j,l}$ represents target $j$'s weight on target feature $l$. The problem is to predict for a new drug-target pair $<i',j'>$, the possibility of a positive DTI $p(p_{i',j'}=1)$.
+
+%unclear
+Similar to DTINet~\cite{Luo2017Network}, we use a compact feature expression learnt from drug and protein networks. To extracting features $X,Y$, we first create networks that involve drugs (for $X$) and proteins (for $Y$). We compute similarity score between each pair of nodes in the networks. Then, the diffusion component analysis (DCA)~\cite{Cho2015DCA} is applied to learn a low-dimensional vector representation of each node of the drug network and protein network. Note here that $X,Y$ can be extracted from a single network or an aggregation of several networks. The details of feature extraction are described in Sec.~\ref{sec:experiment}.
+
+
+
+In addition to the features $X,Y$ and labels $P$, we make one essential modification to the problem definition. We assume that the inputs also contain responses $R\in \mathcal{R}^{N\times M}$, where $R_{i,j}=0$ indicates an unknown DTI, $R_{i,j}=1$ indicates a verified DTI (positive or negative). For positive responses $R_{i,j}=1$, the labels $P_{i,j}$ are observed. For negative responses $R_{i,j}=0$, the labels are hidden and unknown.
+
+\subsection{FNML Model}\label{sec:model}
+
+We use a factor model, depicted in Fig.~\ref{fig:model}. The features $X,Y$ are in different dimensions. To associate the drug features with the target features, we introduce a hidden matrix $Z\in\mathcal{R}^{K\times L}$, where $Z_{k,l}$ is a projection that maps the drug feature $k$ to the target feature $l$. We assume that $Z$ is sampled from a Gaussian distribution,
+
+\begin{equation}\label{equ:z}
+\forall k,l, Z_{k,l}\sim \mathcal{N}(0,\sigma^2),
+\end{equation}
+where $\sigma^2$ is the variance. We use zero mean to favor sparse feature mapping, i.e. a drug feature $k$ is associated with a few target features.
+
+\begin{figure}
+  \centering
+\scalebox{0.8}{
+  \tikz[yscale=0.5]{ %
+%hyper parameters
+  %latent nodes
+    \node[const] (x) {$X$} ; %
+    \node[const, right =of x] (y) {$Y$};
+     \node[const, right =of y] (sigma) {$\sigma^2$};
+    \node[latent, below = of sigma] (z) {$Z$};
+           %per interaction
+    \node[obs, below=2 of z](p){$P$};
+      \node[obs, below= of p] (r){$R$};
+  \node[latent, right = 2 of r] (beta){$\beta$};
+  \node[const,right = of beta](eta) {$\eta$};
+    \edge{x}{p};
+    \edge{sigma}{z};
+    \edge{y}{p};
+    \edge{z}{p};
+    \edge{p}{r};
+  \edge{beta}{r};
+  \edge{eta}{beta};
+     \plate[inner sep=0.2cm, xshift=-0.12cm, yshift=0.12 cm] {plate} {(p) (r)} {N};
+   \plate[inner sep=0.2cm, xshift=-0.12cm, yshift=0.12 cm] {plate2} {(beta)} {2};
+ }}
+\vspace*{-5pt}
+\caption{Graphical Representation of the FNML model}\label{fig:model}
+\end{figure}
+
+We then assume that the binary label $P_{i,j}$ is generated from the following process:
+\begin{equation}\label{equ:p}
+\forall i,j, p(P_{i,j}=1|X,Y,Z)=\frac{1}{1+\exp{(-XZY)}_{i,j}}.
+\end{equation}
+The binary response is sampled from a Bernoulli distribution. The parameters of the Bernoulli distribution are related to the value of each $P_{i,j}$. Therefore we define $\beta_p\in\mathcal{R}^{2},p\in \{0,1\}$, $\forall p, \beta_{p,0}>0,\beta_{p,1}>0,\beta_{p,0}+\beta_{p,1}=1$, we have:
+\begin{eqnarray}\label{equ:q}
+\forall p\in \{0,1\}, \beta_p \sim Beta(\eta),\\
+\forall i,j, R_{i,j} \sim Bern (\beta_{P_{i,j},1}),
+\end{eqnarray}
+where $\eta\in\mathcal{R}^{2}$ is the hyperparameter for the Beta distribution.
+
+\subsection{Inference}\label{sec:inference}
+The objective is to maximize the likelihood which consists of two terms. The first term is on partial observations, i.e. $R_{i,j}=0$ and $P_{i,j}$ unknown. The second term is on full observations, i.e. $R_{i,j}=1$ and known $P_{i,j}$.
+
+\begin{eqnarray}\label{equ:loss}
+\mathcal{L}&=&\sum_{R_{i,j}=0} \log p(R_{i,j}|X,Y,\sigma^2,\eta) \nonumber\\
+&+& \sum_{R_{i,j}=1} \log p(R_{i,j},P_{i,j}|X,Y,\sigma^2,\eta)
+\end{eqnarray}
+
+Direct optimization for both terms in Equ.~\ref{equ:loss} is intractable, as they involve integration over continuous hidden variables. For example, $p(R|X,Y,\sigma^2,\eta)=\int_{P,Z,\beta} p(R|P,\beta,\eta) p(P|X,Y,Z) p(Z|\sigma^2) p(\beta|\eta) $. We employ variational inference~\cite{Variational} to infer the parameters. That is, we use the mean field assumption to factorize the posterior distribution: 
+\begin{equation}
+    q(Z,\beta,P|R,X,Y,\sigma^{2},\eta) = q(P|\theta)q(Z|\mu,\upsilon)q(\beta|\rho),
+\end{equation}
+It is convenient if $q(P|\theta),q(Z|\mu,\upsilon),q(\beta|\rho)$ are exponential distributions. We approximate the sigmoid function in Equ.~\ref{equ:p} by an exponential distribution. We use the property that any sigmoid function $\sigma(\cdot)$ has a lower bound:
+\begin{equation}
+q(P|\theta)=\sigma(\theta)\geq \sigma(\zeta)\exp{((\theta-\zeta)/2-\lambda(\zeta)(\theta^2-\zeta^2))},
+\end{equation}
+where $\lambda(\zeta)=[\sigma(\zeta)-1/2]/[2\zeta]$.
+Maximize the likelihood is equal to maximize ELBO(Evidence Lower BOund):
+\begin{eqnarray}\label{elbo}
+    %L(q) = \sum_{(i,j)\in s1}(E_{q(Z,\beta)}[\ln p(R_{i,j},P_{i,j},Z,\beta)] -E_{q(Z,\beta)}[\ln q(Z,\beta)]) + \nonumber \\  \sum_{(i,j)\in s2}(E_{q(Z,\beta ,P_{i,j})}[\ln P(R_{i,j},P_{i,j},Z,\beta)] -E_{q(Z,\beta,P_{i,j})}[\ln q(Z,\beta,P_{i,j})])
+    \mathcal{L}(q(Z,\beta ,P)) &=& E_{q(Z,\beta ,P)}[\ln P(R,P,Z,\beta)] \nonumber \\ &-&E_{q(Z,\beta,P)}[\ln q(Z,\beta,P)]
+\end{eqnarray}
+We divide the data objects into two disjoint sets, $s_1 = \{(i,j)\in \mathcal{R}^{N\times M}|R_{i,j}=1\}$, and $s_2= \{(i,j)\in \mathcal{R}^{N\times M}|R_{i,j}=0\}$.
+First we derive the parameters of $\ln{q(Z_{k,l}|\mu_{k,l},\upsilon_{k,l})}$:
+\begin{eqnarray*}
+    \ln q(Z_{k,l}|\mu_{k,l},\upsilon_{k,l}) 
+    &=& \sum_{(i,j)\in s_1}E_{q(\beta)}[\ln p(R_{i,j},P_{i,j},Z,\beta)]  \\
+    &+& \sum_{(i,j)\in s_2}E_{q(\beta,P_{i,j})}[\ln p(R_{i,j},P_{i,j},Z,\beta) \\
+    &+& const
+\end{eqnarray*}
+Where $const$ represents the irrelevant item.
+%\begin{eqnarray*}
+%    E_{q(\beta,P)}[\ln p(R,P,Z,\beta)]&=& XZY^{T}*\theta %-\frac{XZY^{T}}{2} \nonumber \\
+%    &-&\lambda(\xi)(XZY^{T})^2-\frac{Z^2}{2\sigma^2}+const
+%\end{eqnarray*}
+%\begin{eqnarray*}
+%E_{q(\beta)}[\ln p(R,P,Z,\beta)] &=& XZY^{T} - %\frac{XZY^{T}}{2}\\
+% &-&\lambda(\xi)(XZY^{T})^2 -\frac{Z^2}{2\sigma^2}+const
+%\end{eqnarray*}
+Removing irrelevant items and get:
+\begin{eqnarray*}
+    \ln q(Z_{k,l}|\mu_{k,l},\upsilon_{k,l})&=&[\sum_{(i,j)\in s_2}[(\theta_{i,j}-\frac{1}{2})X_{i,k}*(Y^{T})_{l,j}]\\
+    &+& \sum_{(i,j)\in s_1}\frac{1}{2}X_{i,k}*(Y^{T})_{l,j}]Z_{k,l}\\
+    &-&(\sum_{i,j}\lambda(\zeta_{ij})*X^{2}_{i,k}*{(Y^{T})_{l,j}}^{2} \\
+    &+&\frac{1}{\sigma^{2}})*Z^{2}_{k,l}
+\end{eqnarray*}
+Since $Z_{k,l}$ obeys a Gaussian distribution, the expectation and variance of the Gaussian distribution can be obtained:
+\begin{eqnarray*}
+\mu_{k,l} = \frac{\sum_{(i,j)\in s_2}(\theta_{i,j}-\frac{1}{2})X_{i,k}*Y_{j,l}+\sum_{(i,j)\in s_1}\frac{1}{2}X_{i,k}*Y_{j,l}}{2*(\sum_{i,j}\lambda(\zeta_{i,j})X^{2}_{i,k}Y_{j,l}^{2}+\frac{1}{\sigma^2})}
+\end{eqnarray*}
+\begin{eqnarray*}
+\upsilon_{k,l} = \frac{1}{\sqrt{2*(\sum_{i,j}\lambda(\zeta_{i,j})X^{2}_{i,k}Y_{j,l}^{2}+\frac{1}{\sigma^2})}}
+\end{eqnarray*}
+Next, we derive $\ln(\beta|\rho)$:
+\begin{eqnarray*}
+    \ln q(\beta|\rho) 
+    &=& \sum_{(i,j)\in s_1}E_{q(Z)}{\ln p(R_{i,j},P_{i,j},Z,\beta)}  \nonumber \\ 
+    &+& \sum_{(i,j)\in s_2}E_{q(Z,P_{i,j})}{\ln p(R_{i,j},P_{i,j},Z,\beta)} + const
+\end{eqnarray*}
+Expanding the two items $\sum_{(i,j)\in s_1}E_{q(Z)}{\ln p(R_{i,j},P_{i,j},Z,\beta)}$ and $\sum_{(i,j)\in s_2}E_{q(Z,P_{i,j})}{\ln p(R_{i,j},P_{i,j},Z,\beta)}$, then remove irrelevant items: 
+\begin{eqnarray*}
+    \ln q(\beta|\rho) &=& (\sum_{(i,j)\in s_2}\theta _{i,j}R_{i,j} + \sum_{(i,j)\in s_1}P_{i,j}R_{i,j} +\eta_{10}-1)\ln{\beta_{1}}\\
+    &+&[\sum_{(i,j)\in s_2}\theta_{i,j} (1-R_{i,j}) + \sum_{(i,j)\in s_1}P_{i,j}(1-R_{i,j})\\
+    &+&\eta_{11}-1]\ln(1-\beta_{1})
+    +[\sum_{(i,j)\in s_2}(1-\theta_{i,j})R_{i,j} \\
+    &+& \sum_{(i,j)\in s_1}(1-P_{i,j})R_{i,j}  +\eta_{00}-1]\ln{\beta_0} \\
+    &+&[\sum_{(i,j)\in s_2}(1-\theta_{i,j})(1-R_{i,j})\\ 
+    &+& \sum_{(i,j)\in s_1}(1-P_{i,j})(1-R_{i,j}) +\eta_{01}-1]\ln(1-\beta_{0})
+\end{eqnarray*}
+Because $\beta$ obeys the Beta distribution, we can get the parameters: 
+\begin{eqnarray*}
+\rho_{0,0} &=& \eta_{0,0}\\
+\rho_{0,1} &=& \sum_{(i,j)\in s_2}(1-\theta_{i,j})+\eta_{0,1}\\
+\rho_{1,0} &=& \left|s_1\right| +\eta_{1,0}\\
+\rho_{1,1} &=& \sum_{(i,j)\in s_2}\theta_{i,j}+\eta_{1,1}
+\end{eqnarray*}
+where $\left|s_1\right|$ is the number of elements is set $s_1$. Next, we derive $\ln(P_{i,j}|\theta_{i,j})$:
+\begin{eqnarray*}
+\ln q(P_{i,j}|\theta_{i,j}) &=& E_{q(Z,\beta)}[\ln p(R_{i,j},P_{i,j},Z,\beta)] \\
+&=& P_{i,j}*\ln[exp(R_{i,j}*\psi(\rho_{1,0}))\\
+&*&exp[(1-R_{i,j})*\psi(\rho_{1,1})]*exp(-\psi(\rho_{1,0}\\
+&+&\rho_{1,1}))*exp(X\mu_{z}Y)]+(1-P_{i,j}) \\
+&*&\ln[exp(R_{i,j}*\psi(\rho_{0,0}))*exp[(1-R_{i,j})\\
+&*&\psi(\rho_{0,1})]*exp(-\psi(\rho_{0,0}+\rho_{0,1}))]
+\end{eqnarray*}
+we define:
+\begin{eqnarray*}
+l_1 = exp(\psi(\rho_{1,1})-\psi(\rho_{1,0}+\rho_{1,1})+X_{i}\mu Y_{j}^{T})\\
+l_2 = exp(\psi(\rho_{0,1})-\psi(\rho_{0,0}+\rho_{0,1}))
+\end{eqnarray*}
+Then we get the estimated value of $\theta_{i,j}=\frac{l_1}{l_1+l_2}$.
+Finally, for variational parameters $\zeta$, we maximize Equ.~\ref{equ:variational}:
+\begin{equation}\label{equ:variational}
+    \ln{\sigma(\zeta_{i,j})}-\frac{\zeta_{i,j}}{2}-\lambda(\zeta_{i,j})[(X_{i}ZY_{j}^{T})^2-(\zeta_{i,j})^2]
+\end{equation}
+Deriving the Equ.~\ref{equ:variational} and making it equal to $0$. We get the update formula for the variation parameters $\zeta_{i,j} = \left|X_{i}\mu Y_{j}^T\right|$.
+
+As shown in Alg.~\ref{alg:model}, in each iteration of the inference we alternatively optimize the variational parameters for $q(Z|\mu,\upsilon),q(\beta|\rho), q(P|\theta)$ and the parameters for the lower bound $\sigma(\zeta)$.  In each iteration, we first obtain the optimal $\theta,\mu,v,\rho$ and then we update $\zeta$. The iteration is repeated until convergence is achieved.
+
+\begin{algorithm}
+    \SetKwInOut{Input}{input}
+    \SetKwInOut{Output}{output}
+    \Input{P, R, X, Y}
+    \Output{$\mu$, $\upsilon$, $\rho$, $\theta$, $\zeta$}
+    initialization\;
+    \Repeat{convergence}{
+        \For{$Z_{k,l} \in Z$}{
+            $\mu_{k,l} \leftarrow \frac{\sum_{(i,j)\in s_2}(\theta_{i,j}-\frac{1}{2})X_{i,k}*Y_{j,l}+\sum_{(i,j)\in s_1}\frac{1}{2}X_{i,k}*Y_{j,l}}{2*(\sum_{i,j}\lambda(\zeta_{i,j})X^{2}_{i,k}Y_{j,l}^{2}+\frac{1}{\sigma^2})}$\;
+            $\upsilon_{k,l} \leftarrow \frac{1}{\sqrt{2*(\sum_{i,j}\lambda(\zeta_{i,j})X^{2}_{i,k}Y_{j,l}^{2}+\frac{1}{\sigma^2})}}$\;
+        }
+        \For{$\beta$}{
+            $\rho_{0,0} \leftarrow \eta_{0,0}$\;
+            $\rho_{0,1} \leftarrow \sum_{(i,j)\in s_2}(1-\theta_{i,j})+\eta_{0,1}$\;
+            $\rho_{1,0} \leftarrow \left|s_1\right| +\eta_{1,0}$\;
+            $\rho_{1,1} \leftarrow \sum_{(i,j)\in s_2}\theta_{i,j}+\eta_{1,1}$\;
+        }
+        \For{$(i,j) \in s_2$}{
+            $l_1 = exp(\psi(\rho_{1,1})-\psi(\rho_{1,0}+\rho_{1,1})+X_{i}\mu Y_{j}^{T})$\;
+            $l_2 = exp(\psi(\rho_{0,1})-\psi(\rho_{0,0}+\rho_{0,1}))$\;
+            $\theta_{i,j} \leftarrow \frac{l_1}{l_1+l_2}$\;
+        }
+        \For{$(i,j) \in s_1+s_2$}{
+            $\zeta_{i,j} \leftarrow \left|X_{i}\mu Y_{j}^T\right|$\;
+        }
+    }
+    \caption{Inference for FNML}\label{alg:model}
+\end{algorithm}
+
+
+%The framework of our ensemble model is shown in Fig.~\ref{fig:ensemble}.
+%%figure need to be modified. 
+%\begin{figure}[!ht]
+%\centering
+%\includegraphics[width=8cm]{ensemble_framework1.eps}
+%\caption{Framework of ensemble model.}
+%\label{fig:ensemble}
+%\end{figure}
+%
+%Out ensemble algorithm is different traditional ensemble methods (bagging~\cite{Bagging}, boosting~\cite{Boosting}) in following two point: (1) Traditional bagging random sampling the data sets without taking into account the differences between samples. (2) The boosting method treats both positive and negative samples equally, so it does not apply to situations where the data set is heavily unbalanced. Our ensemble model is more like a combination of bagging and boosting.  
+
+
+
+\section{Experiment}\label{sec:experiment}
+\subsection{Experimental Setup}
+
+
+\textbf{Datasets.} 
+We use the same datasets as in~\cite{Luo2017Network}: i.e. the drug-target interaction labels are obtained from the latest version of DrugBank (version 3.0)~\cite{Knox2011DrugBank}. This data set is referred to as the full data set. Only $0.18\%$ of the drug-target interactions are labelled as positive, none is labelled as negative. As in~\cite{Luo2017Network}, we also construct a sample dataset, where all the positive interactions are reserved and an equal number of unknown interactions are sampled to be negative. Statistics of the two data sets are shown in Tab.~\ref{tab:data}. 
+\begin{table}[htp]
+\caption{Statistics of the datasets}\label{tab:data}
+\center
+\vspace*{-10pt}
+\small
+\begin{tabular}{|p{0.8cm}|p{0.8cm}|p{0.9cm}|p{1cm}|p{1.2cm}|p{1.2cm}|}
+%
+%{|c|c|c|c|c|c|}
+\hline
+Data & \#Drugs & \#Targets & \#Positive & \#Negative & \#Unknown \\\hline
+Full & 708 & 1,512 & 1,923 & 0 & 1,068,573 \\\hline
+Sample & 708 & 1,512 & 1,923 & 1,923 & 1,066,650 \\\hline
+\end{tabular}
+\vspace*{-5pt}
+\end{table}%
+
+We use a variety of networks to extract features $X,Y$. The default feature vectors $X$ are extracted from drug structure similarity network (denoted as ds), where the similarity score between two drugs is calculated using the Tanimoto coefficient~\cite{Hattori2003Drug} according to their chemical structures; The default feature vectors $Y$ are extracted from protein sequence similarity network (denoted as ps), which is constructed by computing the Smith-Waterman score~\cite{Smith1981Protein} of their primary sequences. In order to evaluate model performance with different features, we also use three extra drug networks: drug-drug interaction network (dd)~\cite{Knox2011DrugBank}, the drug-disease network (di)~\cite{Davis2012DrugDisease}, the drug-side-effect network (de)~\cite{Kuhn2010DrugSideEffect} and two protein networks: the protein-disease association network (pd)~\cite{Davis2012DrugDisease}, the protein-protein interaction network (pp)~\cite{Keshava2009ProteinInteration}. 
+
+
+
+
+
+
+%\textbf{Preprocessing.} Include the networks we use
+
+\textbf{Evaluation.} Throughout the experiment section, the major evaluation metric is \textbf{A}rea \textbf{U}nder \textbf{P}recision \textbf{R}ecall curve (AUPR), which is commonly adopted in bioinformatic studies. An auxiliary evaluation metric is \textbf{A}rea \textbf{U}nder \textbf{ROC} curve (AUROC).
+
+\subsection{Results and Analysis}
+\textbf{FNML Performance.} We first evaluate the accuracy of DTI prediction of the proposed FNML model. The hyper-parameter settings are as follows. The number of dimensions for drug features are $K=300$, for target features $L=300$, hyper-parameters are $\sigma^2=1,\eta_{0}=1,\eta_{1}=1$. In this experiment, we use the default features $X,Y$. The code and data used in FNML are available at: https://github.com/517515435/FNML
+
+
+
+We compare our FNML model with 5 state-of-the-art methods: (1) DeepWalk~\cite{Zong2017Deep}: a similarity-based drug-target prediction method that enhances similarity computation by deep learning method within a linked tripartite network. (2) HNM~\cite{Wang2014Drug}: a network model in which strength between a disease-drug pair is calculated through an iterative algorithm on the heterogeneous graph that also incorporates drug-target information. (3) NetLapRLS~\cite{Xia2010Semi}: a manifold regularization semi-supervised learning method. (4) PUDTI~\cite{Peng2017Screening}: an SVM-based optimization model that is trained on negative samples extracted based on positive-unlabeled learning. (5) DTINet~\cite{Luo2017Network}: a regression model that learns feature space mapping $Z$ by the loss function  $\min_{Z} \sum_{i,j}(P_{i,j}-(XZY)_{i,j})^2$. We do not change the default settings for all the above comparative methods.
+
+In order to maintain the same experimental setup as ~\cite{Luo2017Network}, we perform the evaluation on two datasets. The first one is on the full dataset, i.e. we randomly segment the whole data set to 10 divisions and conduct 10-fold cross-validation. The second one is on the sample dataset, i.e. keeping the ratio of positive and negative samples to $1:1$, we conduct random sampling for 10 times and the reported results are averaged over the 10 sets. 
+
+The comparative performance on the full dataset is shown in Fig.~\ref{fig:full}. We can see that (1) FNML model significantly boosts the AUPR performance by $49.32\%$, compared with the best of state-of-the-art methods. The best comparative method is DTINet, which achieves a $30.29\%$ AUPR. Our FNML model obtains a $45.23\%$ AUPR. As AUPR is well regarded to be a more robust and accurate evaluation metric than AUROC~\cite{Luo2017Network}, this observation demonstrates the potential of our model. (2) Most of the state-of-the-art methods yield very low AUPR results on the full dataset. This observation again reveals that obtaining a high AUPR performance is challenging on the full dataset. (3) In term of AUROC, the best result is obtained by NetLapRLS. However, the best comparative result is $91.78\%$, while FNML produces a comparable $91.12\%$ AUROC. 
+
+
+\begin{figure}[t]
+\centering
+\scalebox{0.8}{
+\subfigure[AUPR]{
+\includegraphics[width=5cm,height=3.5cm]{alldata_AUPR_dsps.eps}
+\label{fig:allaupr}
+}
+\subfigure[AUROC]{
+\includegraphics[width=5cm,height=3.5cm]{alldata_AUROC.eps}
+\label{fig:allauroc}
+}}
+\vspace*{-10pt}
+\caption{On the full dataset, FNML significantly boosts AUPR while obtaining comparable AUROC.}\label{fig:full}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\scalebox{0.8}{
+\subfigure[AUPR]{
+\includegraphics[width=5cm,height=3.5cm]{11data_AUPRdsps.eps}
+\label{fig:allaupr}
+}
+\subfigure[AUROC]{
+\includegraphics[width=5cm,height=3.5cm]{11data_AUROC.eps}
+\label{fig:allauroc}
+}}
+\vspace*{-10pt}
+\caption{On the sample dataset, FNML outperforms state-of-the-art methods in terms of both AUPR and AUROC.}\label{fig:sample}
+
+\end{figure}
+
+The comparative performance on the sample dataset is shown in Fig.~\ref{fig:sample}. We can see that (1) FNML model achieves a better AUPR than all state-of-the-art methods. The best comparative method is DTINet, which achieves $93.20\%$. Our FNML model obtains a $94.66\%$ AUPR. (2) Most of the state-of-the-art methods have a higher AUPR result on the sample dataset than the full dataset, due to the balanced ratio of positive and negative samples. (3) FNML model outperforms all state-of-the-art models in AUROC performance.  The best comparative method is again DTINet, which achieves $91.41\%$. Our FNML model obtains a $92.93\%$ AUROC. (4) Surprisingly, DeepWalk has a lowest AUPR performance on the sample set. A possible reason is that the network representation extracted by deepwalk is based on homogeneous network structure, and thus is not accurate. 
+%Moreover, we use the public open source codes provided by authors in~\cite{Zong2017Deep}, which are not specifically tuned for the DrugBank dataset.
+
+\textbf{FNML Performance with Different Features.} We next study how FNML model performs with different features. We use various combination of $X$ and $Y$ as inputs. That is, we extract X from the four networks on the drug side (i.e. dd,di,de,ds) respectively, extract Y from the three networks on the protein side (i.e. pp, pd, ps) respectively, and use the $12$ combinations as inputs to train the model. The predictions are tested on the full dataset.
+
+We compare the AUPR and AUROC performance of FNML and DTINet. As shown in Fig.~\ref{fig:stability}, FNML outperforms DTINet in most cases. FNML generates better AUPR results for $10$ feature combinations out of $12$. In term of AUROC, FNML is better for $7$ feature combinations. The result shows that the performance improvement is stable. Change of feature representations does not affect FNML's ability to learn a better feature mapping space.
+
+\begin{figure}[!ht]
+\centering
+\subfigure[AUPR]{
+\includegraphics[width=8cm]{stability_AUPRds300_300.eps}
+\vspace*{-5pt}
+\label{fig:stabilityaupr}
+}
+
+\subfigure[AUROC]{
+\includegraphics[width=8cm]{stability_AUROC.eps}
+\label{fig:stabilityauroc}
+}
+\vspace*{-10pt}
+\caption{FNML model consistently outperforms DTINet with different feature inputs.}\label{fig:stability}
+\end{figure}
+
+
+
+\textbf{Number of dimensions.}  We next study the effects of number of dimensions $K,L$. We first fix $L=300$ and tune from $K=100$ to $K=500$.We can see from Fig.~\ref{fig:k} that the best number of drug features is around $300$. Then, we fix $K=300$ and tune from $L=100$ to $L=500$. As shown in Fig.~\ref{fig:l}, the best number of target features is $300$. An appropriate number of drug features is important. When the number of drug features is too large or too small i.e. $K\ge400$ or $K\le200$, we observe a descent fall in both AUPR and AUROC. However, the model performance is less sensitive to the number of target features. For $L>300$, AUPR and AUROC remain the same.   
+
+\begin{figure}[!ht]
+\centering
+\subfigure[$K$ number of drug features]{
+\includegraphics[width=4cm]{parameter_experiment_drug_feature_dsps.eps}
+\label{fig:k}
+}
+\subfigure[$L$ number of protein features]{
+\includegraphics[width=4cm]{parameter_experiment_protein_feature_dsps.eps}
+\label{fig:l}
+}
+\vspace*{-10pt}
+\caption{AUPR and AUROC performance of our model with different number of drug and protein features.}\label{fig:parameter}
+\end{figure}
+
+
+\section{Conclusion}\label{sec:conclusion}
+
+We propose a novel DTI prediction model based on the assumption that unknown DTI labels are missing not at random. By associating the status of a DTI being labelled or unknown to the sign of the DTI label, our proposed FNML model can learn a better feature mapping from drug feature space to target feature space. We experimentally demonstrate that FNML outperforms state-of-the-art computational DTI identification methods. This work sheds some insights into fully exploiting the information in unknown DTIs. Our future directions include analyzing the missing mechanisms and enhancing the DTI prediction performance by an ensemble scheme.
+%We further enhance the DTI prediction performance by an ensemble scheme. The ensemble scheme leverages the predictions of labels and responses by FNML in a framework which integrates over-sampling and boosting. We experimentally validate the importance of including predictions of responses in oversampling. Our future directions include improving the factorization framework and analyzing the missing mechanisms. 
+
+\begin{thebibliography}{10}
+
+\bibitem{Keiser2007ligand}
+Keiser, M. J. et al. Relating protein pharmacology by ligand chemistry. Nature biotechnology 25, 197–206 (2007).
+
+\bibitem{Cheng2007docking}
+Cheng, A. C. et al. Structure-based maximal a nity model predicts small-molecule druggability. Nat. Biotechnol. 25, 71–75 (2007).
+\bibitem{Chen2016docking}
+Chen, X. et al. Drug-target interaction prediction: databases, web servers and computational models. Brief. Bioinform. 17, 696–712 (2016).
+
+\bibitem{Ding2013Similarity}
+Ding, H., Takigawa, I., Mamitsuka, H., and Zhu, S.
+\newblock Similarity-based machine learning methods for predicting drug-target interactions: a brief review. \newblock In {\em Briefings in bioinformatics}, 15(5), 734-747.
+
+
+\bibitem{Luo2017Network}
+Luo Y, Zhao X, Zhou J, et al.
+\newblock A network integration approach for drug-target interaction prediction and computational drug repositioning from heterogeneous information.
+\newblock In {\em Nature Communications}, 2017, 8(1).
+
+
+\bibitem{Peng2017Screening}
+Peng L, Zhu W, Liao B, et al.
+\newblock Screening drug-target interactions with positive-unlabeled learning.
+\newblock In {\em Scientific Reports}, 2017, 7(1): 8087.
+
+
+\bibitem{Little1987Statistical}
+R. J. A. Little and D. B. Rubin.
+\newblock Statistical Analysis with Missing Data, 1987.
+
+\bibitem{Cho2015DCA}
+Cho H, Berger B, Peng J. 
+\newblock Diffusion Component Analysis: Unraveling Functional Topology in Biological Networks
+\newblock In {\em Research in Computational Molecular Biology}. Springer International Publishing, 2015:62-64.
+
+
+\bibitem{Variational}
+Bishop C M. 
+\newblock Pattern Recognition and Machine Learning. 
+\newblock In {\em Information Science and Statistics}. Springer-Verlag New York, Inc. 2006.
+
+
+\bibitem{Knox2011DrugBank}
+Knox C, Law V, Jewison T, et al. 
+\newblock DrugBank 3.0: a comprehensive resource for ‘Omics’ research on drugs. 
+\newblock In {\em Nucleic Acids Research}, 2011, 39(Database issue):D1035.
+
+\bibitem{Hattori2003Drug}
+Hattori, M., Okuno, Y., Goto, S.  Kanehisa, M.
+\newblock Development of a chemical structure comparison method for integrated analysis of chemical and genomic information in the metabolic pathways. 
+\newblock In {\em Journal of the American Chemical Society} 125, 11853–11865 (2003).
+
+
+\bibitem{Smith1981Protein}
+Smith, T. F. and Waterman, M. S. 
+\newblock Identification of common molecular subsequences. 
+\newblock In {\em Journal of molecular biology} 147, 195–197 (1981).
+
+
+\bibitem{Davis2012DrugDisease}
+Davis, A. P., Murphy, C. G., Johnson, R., Lay, J. M., Lennon-Hopkins, K., Saraceni- Richards, C., Sciaky, D., King, B. L. Rosenstein, M. C., Wiegers, T. C., et al. 
+\newblock The comparative toxicogenomics database: update 2013.
+\newblock {\em  Nucleic acids research}, 41(D1), D1104–D1114.
+
+
+\bibitem{Kuhn2010DrugSideEffect}
+Kuhn, M., Campillos, M., Letunic, I., Jensen, L. J., and Bork, P.  
+\newblock A side effect resource to capture phenotypic effects of drugs. 
+\newblock {\em Molecular systems biology}, 6(1), 343.
+
+\bibitem{Keshava2009ProteinInteration}
+Keshava Prasad T S, Goel R, Kandasamy K, et al. 
+\newblock Human Protein Reference Database--2009 update.
+\newblock {\em Nucleic Acids Research}, 2009, 37(Database issue):767-72.
+
+
+\bibitem{Zong2017Deep}
+Zong N, Kim H, Ngo V, et al. 
+\newblock Deep Mining Heterogeneous Networks of Biomedical Linked Data to Predict Novel Drug-Target Associations. 
+\newblock In {\em Bioinformatics}, 2017, 33(15).
+
+
+\bibitem{Wang2014Drug}
+Wang W, Yang S, Zhang X, et al. 
+\newblock Drug repositioning by integrating target information through a heterogeneous network model. 
+\newblock In {\em Bioinformatics}, 2014, 30(20):2923-2930.
+
+
+
+\bibitem{Xia2010Semi}
+Xia Z, Wu L Y, Zhou X, et al. 
+\newblock Semi-supervised drug-protein interaction prediction from heterogeneous biological spaces. 
+\newblock In {\em Bmc Systems Biology}, 2010, 4(S2):1-16.
+
+\end{thebibliography}
+%\balancecolumns
+\end{document}
+
